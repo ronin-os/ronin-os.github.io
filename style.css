@@ -84,6 +84,8 @@ pre, code {
 .nav-logo-img {
   width: 24px;
   height: 24px;
+  max-width: 24px;
+  max-height: 24px;
   filter: brightness(1.2);
 }
 
