@@ -42,9 +42,10 @@
       </h1>
       <p class="hero-desc">
         Ein freestanding x86-Kernel mit eigener Speicherverwaltung (PMM, Paging, Heap),
-        präemptivem Scheduler, VFS-Layer mit RAMFS und FAT32, ELF-Loader,
-        Framebuffer-Konsole sowie GUI-Windowing-System. Vollständig in C entwickelt,
-        kompilierbar via Docker-Cross-Toolchain oder nativer x86_64-elf-GCC-Umgebung.
+        präemptivem Scheduler, VFS-Layer mit RAMFS und FAT32, Framebuffer-Konsole
+        mit ANSI-Farben sowie Block-Device-Zugriff (ATA PIO) inkl. eigener
+        FAT32-Implementierung. Vollständig in C entwickelt, kompilierbar via
+        Docker-Cross-Toolchain oder nativer x86_64-elf-GCC-Umgebung.
       </p>
       <div class="hero-actions">
         <a href="https://github.com/MachuraHarry/RoninOS" class="btn-primary" target="_blank">
@@ -67,57 +68,39 @@
             <span>vfs: mounting ramfs at /</span>
             <span>initrd: /initrd mounted read-only</span>
             <span>scheduler: PIT preemption enabled</span>
-            <span>gui: taskbar, windows, widgets online</span>
+            <span>shell: framebuffer console ready</span>
           </div>
           <div class="boot-progress"><span></span></div>
         </div>
 
         <div class="desktop-content">
           <div class="desktop-topbar">
-            <span>RoninOS initrd online</span>
-            <span>100Hz PIT · TSS · Ring 3</span>
+            <span>RoninOS — framebuffer console @ 1920x1080</span>
+            <span>100Hz PIT · multiboot2 · ATA PIO</span>
           </div>
           <div class="desktop-body">
-            <div class="window terminal-window">
+            <div class="window terminal-window" style="grid-column:1/-1">
               <div class="window-titlebar">
-                <span>terminal</span>
+                <span>terminal — framebuffer console</span>
                 <div class="traffic" aria-hidden="true"><span></span><span></span><span></span></div>
               </div>
               <pre class="terminal"><span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ bootinfo</span>
-<span class="terminal-line"><span class="ok">[OK]</span> Multiboot2 header verified</span>
-<span class="terminal-line"><span class="ok">[OK]</span> Framebuffer console active</span>
+<span class="terminal-line"><span class="ok">[OK]</span> Multiboot2 header verified (0xE85250D6)</span>
+<span class="terminal-line"><span class="ok">[OK]</span> Framebuffer console active (8x16 font)</span>
 <span class="terminal-line"><span class="ok">[OK]</span> VFS mounted at /</span>
 <span class="terminal-line"><span class="ok">[OK]</span> Initrd mounted at /initrd</span>
 
 <span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ help</span>
-<span class="terminal-line">about bootinfo cpuinfo disk fat32 grep hexdump</span>
-<span class="terminal-line">less meminfo procmon run startgui test_fault wc</span>
+<span class="terminal-line">about   bootinfo  cat   cd   clear   disk   echo   fat32</span>
+<span class="terminal-line">fs      heap_test help  ls   mem     meminfo  preempt</span>
+<span class="terminal-line">procmon ps        pwd   reboot  spawn  test_fault  uname</span>
+<span class="terminal-line">uptime  yield</span>
 
-<span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ startgui</span>
-<span class="terminal-line"><span class="warn">desktop</span> window manager started</span></pre>
+<span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ fat32 format hd0 --yes</span>
+<span class="terminal-line"><span class="ok">[OK]</span> FAT32 formatted on hd0</span>
+<span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ fat32 write NOTE.TXT "RoninOS rocks"</span>
+<span class="terminal-line"><span class="ok">[OK]</span> 17 bytes written</span></pre>
             </div>
-
-            <div class="window secondary file-window">
-              <div class="window-titlebar">
-                <span>initrd:/res</span>
-                <div class="traffic" aria-hidden="true"><span></span><span></span><span></span></div>
-              </div>
-              <div class="file-list">
-                <div><span>kernel/</span><strong>apps, fs, mem, sched, ui</strong></div>
-                <div><span>userspace/</span><strong>hello, cat, clear, hexdump</strong></div>
-                <div><span>docs/</span><strong>boot, memory, scheduler</strong></div>
-                <div><span>tools/</span><strong>qemu, uefi, usb image</strong></div>
-              </div>
-            </div>
-          </div>
-          <div class="desktop-taskbar">
-            <div class="taskbar-left">
-              <img src="assets/roninos-start-icon.png" alt="">
-              <span class="taskbar-item active">terminal</span>
-              <span class="taskbar-item">files</span>
-              <span class="taskbar-item">paint</span>
-            </div>
-            <span class="taskbar-item">ready</span>
           </div>
         </div>
       </div>
@@ -127,7 +110,7 @@
   <section id="features" class="section">
     <div class="section-inner">
       <h2 class="section-title">Kernkomponenten</h2>
-      <p class="section-sub">Acht module Bereiche, die den Kernel von der Bootsequenz bis zur GUI vollständig abdecken.</p>
+      <p class="section-sub">Neun modulare Bereiche, die den Kernel von der Speicherverwaltung bis zur Shell vollständig abdecken.</p>
       <div class="features-grid">
         <div class="feature-card">
           <div class="feature-icon">01</div>
@@ -161,13 +144,18 @@
         </div>
         <div class="feature-card">
           <div class="feature-icon">07</div>
-          <h3>GUI / Windowing</h3>
-          <p>Experimentelles Fenstersystem mit Taskbar, Mauszeiger, Z-Order und macOS-artigen Traffic-Light-Buttons. Basis-Apps: Terminal, Dateimanager und Paint. VS-Code-Dark-Theme.</p>
+          <h3>Exception-Diagnose & Debugging</h3>
+          <p>Register-Dumps bei Kernel-Panics und User-Faults mit CPU-Registeranzeige, EIP/CS/EFLAGS und Kernel/User-Mode-Erkennung via CS. Manueller Exception-Test via <code>test_fault &lt;gp|pf|ud&gt;</code>.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">08</div>
           <h3>UEFI & BIOS Boot</h3>
           <p>Multiboot2-konformer Kernel-Header. BIOS-ISO, UEFI-Superfloppy-FAT32 und partitioniertes MBR/FAT32-USB-Image. GRUB mit gfxmode-Fallbackkette und <code>videoinfo</code>-Debug-Eintrag.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">09</div>
+          <h3>Block-Devices & FAT32</h3>
+          <p>ATA PIO Block-Device-Discovery (Primary/Secondary, Master/Slave) mit generischem Blockdevice-Layer. Eigene FAT32-Implementierung mit Format, Mount, Read, Write und Delete im 8.3-Format.</p>
         </div>
       </div>
     </div>
@@ -176,7 +164,7 @@
   <section id="architecture" class="section section-dark">
     <div class="section-inner">
       <h2 class="section-title">Systemarchitektur</h2>
-      <p class="section-sub">Der gesamte Boot- und Initialisierungsablauf – von der Firmware bis zur laufenden Shell.</p>
+      <p class="section-sub">Der gesamte Boot- und Initialisierungsablauf – von der Firmware bis zur laufenden Shell. Vollständig freestanding, keine libc-Abhängigkeit.</p>
 
       <div class="arch-deep">
         <div class="arch-memory arch-card-wide">
@@ -216,7 +204,7 @@
             <div class="flow-arrow">↓</div>
             <div class="flow-step">sched_init()</div>
             <div class="flow-arrow">↓</div>
-            <div class="flow-step">VFS · Shell · GUI</div>
+            <div class="flow-step">VFS · Shell · Framebuffer</div>
           </div>
         </div>
       </div>
@@ -225,14 +213,13 @@
         <div class="arch-card">
           <h3>kernel/</h3>
           <ul>
-            <li><span class="t-blue">apps/</span> – Shell-Applikationen</li>
-            <li><span class="t-blue">fs/</span> – RAMFS, FAT32, VFS</li>
-            <li><span class="t-blue">lib/</span> – Freestanding-Bibliothek</li>
+            <li><span class="t-blue">apps/</span> – Shell-Apps (fs, fat32, scheduler tools)</li>
+            <li><span class="t-blue">fs/</span> – RAMFS, FAT32, VFS-Layer</li>
+            <li><span class="t-blue">lib/</span> – Freestanding-Hilfsbibliothek</li>
             <li><span class="t-blue">mem/</span> – PMM, Paging, Heap</li>
             <li><span class="t-blue">sched/</span> – Threads, Scheduler</li>
             <li><span class="t-blue">shell/</span> – Parser, Builtins</li>
-            <li><span class="t-blue">terminal/</span> – VGA + Framebuffer</li>
-            <li><span class="t-blue">ui/</span> – GUI, Theme, Icons</li>
+            <li><span class="t-blue">terminal/</span> – VGA + Framebuffer-Konsole</li>
           </ul>
         </div>
         <div class="arch-card">
@@ -252,29 +239,40 @@
 
   <section id="shell" class="section">
     <div class="section-inner">
-      <h2 class="section-title">Shell-Referenz</h2>
-      <p class="section-sub">Die integrierte Shell bietet über 20 Kommandos – von der Dateisystem-Introspektion bis zur Exception-Diagnose.</p>
+      <h2 class="section-title">Shell & Kommandos</h2>
+      <p class="section-sub">Integrierter Kommando-Parser mit Builtins, registrierbaren Apps und VFS-Integration – von der Dateisystem-Introspektion bis zur Exception-Diagnose.</p>
       <div class="cmd-grid">
         <div class="cmd-col">
           <h3>Builtins</h3>
           <div class="cmd-list">
             <div class="cmd-item"><code>help</code><span>Alle verfügbaren Befehle</span></div>
             <div class="cmd-item"><code>clear</code><span>Terminal leeren</span></div>
-            <div class="cmd-item"><code>echo</code><span>Text ausgeben</span></div>
+            <div class="cmd-item"><code>echo &lt;text&gt;</code><span>Text ausgeben</span></div>
             <div class="cmd-item"><code>uname</code><span>Kernel-Identität</span></div>
             <div class="cmd-item"><code>uptime</code><span>Systemlaufzeit</span></div>
             <div class="cmd-item"><code>reboot</code><span>CPU-Reset via Keyboard-Controller</span></div>
+            <div class="cmd-item"><code>mem</code><span>Alias für meminfo</span></div>
           </div>
         </div>
         <div class="cmd-col">
           <h3>System-Apps</h3>
           <div class="cmd-list">
-            <div class="cmd-item"><code>bootinfo</code><span>Multiboot2-Diagnose</span></div>
+            <div class="cmd-item"><code>about</code><span>Kernel-Informationen</span></div>
+            <div class="cmd-item"><code>bootinfo</code><span>Multiboot2-/Bootloader-Diagnose</span></div>
             <div class="cmd-item"><code>meminfo</code><span>Heap-/PMM-Statistiken</span></div>
             <div class="cmd-item"><code>heap_test</code><span>Allokator-Selbsttest</span></div>
             <div class="cmd-item"><code>ps</code><span>Thread-Tabelle</span></div>
             <div class="cmd-item"><code>procmon</code><span>Prozess-Snapshot</span></div>
-            <div class="cmd-item"><code>test_fault</code><span>Exception-Test (GP/PF/UD)</span></div>
+            <div class="cmd-item"><code>spawn &lt;n&gt;</code><span>Worker-Threads erzeugen</span></div>
+          </div>
+        </div>
+        <div class="cmd-col">
+          <h3>Scheduler & Debug</h3>
+          <div class="cmd-list">
+            <div class="cmd-item"><code>yield</code><span>Freiwilliger Thread-Wechsel</span></div>
+            <div class="cmd-item"><code>preempt on|off</code><span>Preemption umschalten</span></div>
+            <div class="cmd-item"><code>test_fault &lt;gp|pf|ud&gt;</code><span>Exception-Test für Register-Dump</span></div>
+            <div class="cmd-item"><code>bootinfo</code><span>Framebuffer-/Memory-Map-Diagnose</span></div>
           </div>
         </div>
         <div class="cmd-col">
@@ -282,10 +280,12 @@
           <div class="cmd-list">
             <div class="cmd-item"><code>ls [path]</code><span>VFS-Verzeichnis listing</span></div>
             <div class="cmd-item"><code>cat &lt;path&gt;</code><span>Datei anzeigen</span></div>
+            <div class="cmd-item"><code>pwd</code><span>VFS-Arbeitsverzeichnis</span></div>
             <div class="cmd-item"><code>cd [path]</code><span>cwd wechseln</span></div>
             <div class="cmd-item"><code>fs &lt;cmd&gt;</code><span>RAMFS-Operationen</span></div>
             <div class="cmd-item"><code>fat32 &lt;cmd&gt;</code><span>FAT32 auf Blockdevice</span></div>
-            <div class="cmd-item"><code>disk</code><span>ATA-Blockdevices</span></div>
+            <div class="cmd-item"><code>disk</code><span>ATA-Blockdevices anzeigen</span></div>
+            <div class="cmd-item"><code>disk info|read</code><span>Blockdevice-Details/Lesen</span></div>
           </div>
         </div>
       </div>
@@ -326,12 +326,12 @@
 
   <section id="roadmap" class="section">
     <div class="section-inner">
-      <h2 class="section-title">Roadmap</h2>
-      <p class="section-sub">Der aktuelle Entwicklungsstand und die geplanten Meilensteine.</p>
+      <h2 class="section-title">Entwicklungsstand</h2>
+      <p class="section-sub">Umgesetzte Komponenten und geplante Erweiterungen laut Repository-Roadmap.</p>
 
       <div class="roadmap">
         <div class="roadmap-col">
-          <h3 class="roadmap-heading done">✓ Stabil</h3>
+          <h3 class="roadmap-heading done">✓ Umgesetzt</h3>
           <div class="roadmap-items">
             <div class="roadmap-item done">
               <span class="rm-status done"></span>
@@ -351,7 +351,7 @@
             </div>
             <div class="roadmap-item done">
               <span class="rm-status done"></span>
-              <div><strong>Framebuffer-Konsole</strong><span>ANSI-Farben, dynamisches Raster, mehrere Fonts</span></div>
+              <div><strong>Framebuffer-Konsole</strong><span>ANSI-Farben, dynamisches Raster, 8x16/16x32-Fonts</span></div>
             </div>
             <div class="roadmap-item done">
               <span class="rm-status done"></span>
@@ -359,19 +359,15 @@
             </div>
             <div class="roadmap-item done">
               <span class="rm-status done"></span>
-              <div><strong>ELF-Loader + Ring 3</strong><span>ELF32-Binaries, fork/exec, int 0x80-Syscalls, Signals</span></div>
+              <div><strong>Shell & App-System</strong><span>Kommando-Parser, Builtins, registrierbare Apps</span></div>
             </div>
             <div class="roadmap-item done">
               <span class="rm-status done"></span>
-              <div><strong>GUI-Windowing</strong><span>Window-Manager, Taskbar, Maus, Dateimanager/Paint/Terminal</span></div>
+              <div><strong>Exception-Diagnose</strong><span>Register-Dumps, Kernel/User-Mode-Erkennung, test_fault</span></div>
             </div>
             <div class="roadmap-item done">
               <span class="rm-status done"></span>
-              <div><strong>TTY / Device-Layer</strong><span>Terminal-Abstraktion, serielle Schnittstellen</span></div>
-            </div>
-            <div class="roadmap-item done">
-              <span class="rm-status done"></span>
-              <div><strong>Config-Manager</strong><span>Persistentes Config, Tastatur-Layouts (DE/US/FR), Shell-App</span></div>
+              <div><strong>UEFI-Boot</strong><span>GRUB-Standalone, gfxmode-Fallbacks, USB-Images</span></div>
             </div>
           </div>
         </div>
@@ -381,15 +377,11 @@
           <div class="roadmap-items">
             <div class="roadmap-item current">
               <span class="rm-status current"></span>
-              <div><strong>Nano-Editor</strong><span>Config-Integration, Tab-Größe, Zeilennummern, Soft-Wrap</span></div>
-            </div>
-            <div class="roadmap-item current">
-              <span class="rm-status current"></span>
-              <div><strong>Systemweite Einstellungen</strong><span>Console-Theme, Shell-Prompt, Boot-Config, Language</span></div>
-            </div>
-            <div class="roadmap-item current">
-              <span class="rm-status current"></span>
               <div><strong>Erweiterte FAT32</strong><span>Unterverzeichnisse, Multi-Cluster-Dateien</span></div>
+            </div>
+            <div class="roadmap-item current">
+              <span class="rm-status current"></span>
+              <div><strong>Verbesserte Debug-Ausgaben</strong><span>Scheduler/Memory-Trace, erweiterte Diagnose</span></div>
             </div>
           </div>
         </div>
@@ -403,11 +395,11 @@
             </div>
             <div class="roadmap-item future">
               <span class="rm-status future"></span>
-              <div><strong>Smoke-Test-Suite</strong><span>Automatisierter CI-Check mit SMOKE:PASS</span></div>
+              <div><strong>Text-Editor-App</strong><span>FAT32-basierter Editor in der Shell</span></div>
             </div>
             <div class="roadmap-item future">
               <span class="rm-status future"></span>
-              <div><strong>Netzwerk-Stack</strong><span>Ethernet-Treiber, TCP/IP (Vision)</span></div>
+              <div><strong>Smoke-Test-Suite</strong><span>Automatisierter CI-Check für Dateisysteme</span></div>
             </div>
           </div>
         </div>
@@ -504,7 +496,7 @@ sudo usermod -aG docker "$USER"
           <img src="assets/ronin-icon.svg" alt="RōninOS" class="footer-logo-img">
           <span>RōninOS</span>
         </div>
-        <p class="footer-desc">Freestanding x86-Kernel in C. ELF-Loader, präemptiver Scheduler, VFS mit RAMFS und FAT32, Framebuffer-Konsole und GUI – vollständig von Grund auf entwickelt.</p>
+        <p class="footer-desc">Freestanding x86-Kernel in C. Präemptiver Scheduler, VFS mit RAMFS und FAT32, Framebuffer-Konsole und Exception-Diagnose – vollständig von Grund auf entwickelt.</p>
         <div class="footer-links">
           <a href="https://github.com/MachuraHarry/RoninOS" target="_blank">GitHub</a>
           <a href="https://github.com/MachuraHarry/RoninOS/issues" target="_blank">Issues</a>
