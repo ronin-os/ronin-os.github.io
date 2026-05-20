@@ -626,10 +626,10 @@ h1 {
 /* ── Desktop Preview ── */
 .hero-preview {
   position: absolute;
-  right: 1.5rem;
+  right: 11.5rem;
   top: 50%;
   transform: translateY(-50%);
-  width: min(680px, 48vw);
+  width: min(880px, 48vw);
   z-index: 1;
 }
 
