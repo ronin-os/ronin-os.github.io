@@ -1057,11 +1057,16 @@ h1 {
 }
 
 /* ── Stagger Delays per Column ── */
-.roadmap-col:nth-child(1) .roadmap-item:nth-child(1) { animation-delay: 0.05s; }
-.roadmap-col:nth-child(1) .roadmap-item:nth-child(2) { animation-delay: 0.13s; }
-.roadmap-col:nth-child(1) .roadmap-item:nth-child(3) { animation-delay: 0.21s; }
-.roadmap-col:nth-child(1) .roadmap-item:nth-child(4) { animation-delay: 0.29s; }
-.roadmap-col:nth-child(1) .roadmap-item:nth-child(5) { animation-delay: 0.37s; }
+.roadmap-col:nth-child(1) .roadmap-item:nth-child(1) { animation-delay: 0.03s; }
+.roadmap-col:nth-child(1) .roadmap-item:nth-child(2) { animation-delay: 0.08s; }
+.roadmap-col:nth-child(1) .roadmap-item:nth-child(3) { animation-delay: 0.13s; }
+.roadmap-col:nth-child(1) .roadmap-item:nth-child(4) { animation-delay: 0.18s; }
+.roadmap-col:nth-child(1) .roadmap-item:nth-child(5) { animation-delay: 0.23s; }
+.roadmap-col:nth-child(1) .roadmap-item:nth-child(6) { animation-delay: 0.28s; }
+.roadmap-col:nth-child(1) .roadmap-item:nth-child(7) { animation-delay: 0.33s; }
+.roadmap-col:nth-child(1) .roadmap-item:nth-child(8) { animation-delay: 0.38s; }
+.roadmap-col:nth-child(1) .roadmap-item:nth-child(9) { animation-delay: 0.43s; }
+.roadmap-col:nth-child(1) .roadmap-item:nth-child(10){ animation-delay: 0.48s; }
 
 .roadmap-col:nth-child(2) .roadmap-item:nth-child(1) { animation-delay: 0.1s; }
 .roadmap-col:nth-child(2) .roadmap-item:nth-child(2) { animation-delay: 0.2s; }
@@ -1070,8 +1075,6 @@ h1 {
 .roadmap-col:nth-child(3) .roadmap-item:nth-child(1) { animation-delay: 0.15s; }
 .roadmap-col:nth-child(3) .roadmap-item:nth-child(2) { animation-delay: 0.25s; }
 .roadmap-col:nth-child(3) .roadmap-item:nth-child(3) { animation-delay: 0.35s; }
-.roadmap-col:nth-child(3) .roadmap-item:nth-child(4) { animation-delay: 0.45s; }
-.roadmap-col:nth-child(3) .roadmap-item:nth-child(5) { animation-delay: 0.55s; }
 
 /* ── Hover: schwebt leicht + Akzent-Glow ── */
 .roadmap-item::before {
