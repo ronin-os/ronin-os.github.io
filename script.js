@@ -21,4 +21,18 @@ document.addEventListener('DOMContentLoaded', () => {
       if (target) target.classList.remove('hidden');
     });
   });
+
+  const roadmap = document.querySelector('.roadmap');
+  if (roadmap) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          roadmap.classList.add('roadmap-visible');
+          observer.unobserve(roadmap);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    observer.observe(roadmap);
+  }
 });
