@@ -72,17 +72,18 @@
           <div class="boot-progress"><span></span></div>
         </div>
 
-        <div class="desktop-topbar">
-          <span>RoninOS initrd online</span>
-          <span>100Hz PIT · TSS · Ring 3</span>
-        </div>
-        <div class="desktop-body">
-          <div class="window terminal-window">
-            <div class="window-titlebar">
-              <span>terminal</span>
-              <div class="traffic" aria-hidden="true"><span></span><span></span><span></span></div>
-            </div>
-            <pre class="terminal"><span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ bootinfo</span>
+        <div class="desktop-content">
+          <div class="desktop-topbar">
+            <span>RoninOS initrd online</span>
+            <span>100Hz PIT · TSS · Ring 3</span>
+          </div>
+          <div class="desktop-body">
+            <div class="window terminal-window">
+              <div class="window-titlebar">
+                <span>terminal</span>
+                <div class="traffic" aria-hidden="true"><span></span><span></span><span></span></div>
+              </div>
+              <pre class="terminal"><span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ bootinfo</span>
 <span class="terminal-line"><span class="ok">[OK]</span> Multiboot2 header verified</span>
 <span class="terminal-line"><span class="ok">[OK]</span> Framebuffer console active</span>
 <span class="terminal-line"><span class="ok">[OK]</span> VFS mounted at /</span>
@@ -94,29 +95,30 @@
 
 <span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ startgui</span>
 <span class="terminal-line"><span class="warn">desktop</span> window manager started</span></pre>
-          </div>
+            </div>
 
-          <div class="window secondary file-window">
-            <div class="window-titlebar">
-              <span>initrd:/res</span>
-              <div class="traffic" aria-hidden="true"><span></span><span></span><span></span></div>
-            </div>
-            <div class="file-list">
-              <div><span>kernel/</span><strong>apps, fs, mem, sched, ui</strong></div>
-              <div><span>userspace/</span><strong>hello, cat, clear, hexdump</strong></div>
-              <div><span>docs/</span><strong>boot, memory, scheduler</strong></div>
-              <div><span>tools/</span><strong>qemu, uefi, usb image</strong></div>
+            <div class="window secondary file-window">
+              <div class="window-titlebar">
+                <span>initrd:/res</span>
+                <div class="traffic" aria-hidden="true"><span></span><span></span><span></span></div>
+              </div>
+              <div class="file-list">
+                <div><span>kernel/</span><strong>apps, fs, mem, sched, ui</strong></div>
+                <div><span>userspace/</span><strong>hello, cat, clear, hexdump</strong></div>
+                <div><span>docs/</span><strong>boot, memory, scheduler</strong></div>
+                <div><span>tools/</span><strong>qemu, uefi, usb image</strong></div>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="desktop-taskbar">
-          <div class="taskbar-left">
-            <img src="assets/roninos-start-icon.png" alt="">
-            <span class="taskbar-item active">terminal</span>
-            <span class="taskbar-item">files</span>
-            <span class="taskbar-item">paint</span>
+          <div class="desktop-taskbar">
+            <div class="taskbar-left">
+              <img src="assets/roninos-start-icon.png" alt="">
+              <span class="taskbar-item active">terminal</span>
+              <span class="taskbar-item">files</span>
+              <span class="taskbar-item">paint</span>
+            </div>
+            <span class="taskbar-item">ready</span>
           </div>
-          <span class="taskbar-item">ready</span>
         </div>
       </div>
     </div>

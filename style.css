@@ -629,15 +629,13 @@ h1 {
   right: 1.5rem;
   top: 50%;
   transform: translateY(-50%);
-  width: min(620px, 44vw);
+  width: min(680px, 48vw);
   z-index: 1;
 }
 
 .desktop-preview {
   position: relative;
   aspect-ratio: 16 / 9;
-  display: flex;
-  flex-direction: column;
   border: 1px solid rgba(255, 255, 255, 0.24);
   border-radius: 8px;
   overflow: hidden;
@@ -645,6 +643,13 @@ h1 {
     linear-gradient(180deg, rgba(17, 20, 23, 0.24), rgba(17, 20, 23, 0.55)),
     url("assets/roninos-wallpaper.jpg") center / cover;
   box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+}
+
+.desktop-content {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .booting .desktop-topbar,
@@ -963,7 +968,7 @@ h1 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 1rem;
-  perspective: 1200px;
+  perspective: 1400px;
 }
 .roadmap-col {
   display: flex;
@@ -971,9 +976,9 @@ h1 {
 }
 .roadmap-col h3 {
   font-size: 0.8125rem;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
   margin-bottom: 0;
   padding: 0.75rem 1rem;
   border-radius: 8px 8px 0 0;
@@ -996,6 +1001,8 @@ h1 {
   color: var(--text-muted);
   border-left: 3px solid var(--bg-surface);
 }
+
+/* ── Roadmap Items Container ── */
 .roadmap-items {
   display: flex;
   flex-direction: column;
@@ -1006,6 +1013,8 @@ h1 {
   overflow: hidden;
   flex: 1;
 }
+
+/* ── Individual Item – Base State (hidden) ── */
 .roadmap-item {
   display: flex;
   gap: 0.75rem;
@@ -1016,33 +1025,78 @@ h1 {
   position: relative;
   overflow: hidden;
   opacity: 0;
-  transform: translateY(12px);
+  transform: translateY(24px) scale(0.95);
+  filter: blur(4px);
+  transition: border-color 0.3s, box-shadow 0.3s;
+  will-change: transform, opacity, filter;
 }
-.roadmap-visible .roadmap-item {
-  animation: rmAppear 500ms ease forwards;
+
+/* ── Per-spalte anderes Animation-Profil ── */
+/* Spalte 1 – links: slide + glow grün */
+.roadmap-col:nth-child(1) .roadmap-item {
+  transform: translateX(-30px) scale(0.95);
 }
-.roadmap-item::after {
+.roadmap-visible .roadmap-col:nth-child(1) .roadmap-item {
+  animation: rmSlideLeft 550ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Spalte 2 – mitte: pop + bounce gelb */
+.roadmap-col:nth-child(2) .roadmap-item {
+  transform: translateY(30px) scale(0.9);
+}
+.roadmap-visible .roadmap-col:nth-child(2) .roadmap-item {
+  animation: rmPop 500ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+/* Spalte 3 – rechts: slide + fade */
+.roadmap-col:nth-child(3) .roadmap-item {
+  transform: translateX(30px);
+}
+.roadmap-visible .roadmap-col:nth-child(3) .roadmap-item {
+  animation: rmSlideRight 500ms ease-out forwards;
+}
+
+/* ── Stagger Delays per Column ── */
+.roadmap-col:nth-child(1) .roadmap-item:nth-child(1) { animation-delay: 0.05s; }
+.roadmap-col:nth-child(1) .roadmap-item:nth-child(2) { animation-delay: 0.13s; }
+.roadmap-col:nth-child(1) .roadmap-item:nth-child(3) { animation-delay: 0.21s; }
+.roadmap-col:nth-child(1) .roadmap-item:nth-child(4) { animation-delay: 0.29s; }
+.roadmap-col:nth-child(1) .roadmap-item:nth-child(5) { animation-delay: 0.37s; }
+
+.roadmap-col:nth-child(2) .roadmap-item:nth-child(1) { animation-delay: 0.1s; }
+.roadmap-col:nth-child(2) .roadmap-item:nth-child(2) { animation-delay: 0.2s; }
+.roadmap-col:nth-child(2) .roadmap-item:nth-child(3) { animation-delay: 0.3s; }
+
+.roadmap-col:nth-child(3) .roadmap-item:nth-child(1) { animation-delay: 0.15s; }
+.roadmap-col:nth-child(3) .roadmap-item:nth-child(2) { animation-delay: 0.25s; }
+.roadmap-col:nth-child(3) .roadmap-item:nth-child(3) { animation-delay: 0.35s; }
+.roadmap-col:nth-child(3) .roadmap-item:nth-child(4) { animation-delay: 0.45s; }
+.roadmap-col:nth-child(3) .roadmap-item:nth-child(5) { animation-delay: 0.55s; }
+
+/* ── Hover: schwebt leicht + Akzent-Glow ── */
+.roadmap-item::before {
   content: '';
   position: absolute;
   left: 0;
   top: 0;
+  right: 0;
   bottom: 0;
-  width: 0;
-  background: rgba(255,255,255,0.03);
-  transition: width 0.25s;
+  background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+  opacity: 0;
+  transition: opacity 0.35s;
+  pointer-events: none;
 }
-.roadmap-item:hover::after {
-  width: 100%;
+.roadmap-item:hover::before {
+  opacity: 1;
 }
 .roadmap-item:hover {
-  border-color: transparent;
+  transform: translateY(-1px) scale(1.015);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  border-color: rgba(255,255,255,0.08);
+  z-index: 2;
 }
-.roadmap-item:nth-child(1) { animation-delay: 0.05s; }
-.roadmap-item:nth-child(2) { animation-delay: 0.12s; }
-.roadmap-item:nth-child(3) { animation-delay: 0.19s; }
-.roadmap-item:nth-child(4) { animation-delay: 0.26s; }
-.roadmap-item:nth-child(5) { animation-delay: 0.33s; }
 
+/* ── Status-Dots ── */
 .rm-status {
   width: 8px;
   height: 8px;
@@ -1051,20 +1105,33 @@ h1 {
   margin-top: 0.3rem;
   position: relative;
   z-index: 1;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+.roadmap-item:hover .rm-status {
+  transform: scale(1.5);
 }
 .rm-status.done {
   background: var(--green);
-  box-shadow: 0 0 6px rgba(152, 195, 121, 0.5);
+  box-shadow: 0 0 6px rgba(152, 195, 121, 0.3);
+}
+.roadmap-visible .rm-status.done {
+  animation: rmGlowGreen 2s ease-in-out 0.8s infinite;
 }
 .rm-status.current {
   background: var(--yellow);
-  box-shadow: 0 0 8px rgba(229, 192, 123, 0.6);
-  animation: rmPulse 1.8s ease-in-out infinite;
+  box-shadow: 0 0 8px rgba(229, 192, 123, 0.4);
+}
+.roadmap-visible .rm-status.current {
+  animation: rmGlowYellow 1.5s ease-in-out 0.4s infinite;
 }
 .rm-status.future {
   background: var(--bg-surface);
   border: 1px solid var(--border);
 }
+.roadmap-visible .rm-status.future {
+  animation: rmGlowGray 2.5s ease-in-out 1.2s infinite;
+}
+
 .roadmap-item div {
   position: relative;
   z-index: 1;
@@ -1082,21 +1149,70 @@ h1 {
   font-size: 0.725rem;
   line-height: 1.4;
 }
-@keyframes rmAppear {
-  to {
+
+/* ── Keyframes ── */
+@keyframes rmSlideLeft {
+  0% {
+    opacity: 0;
+    transform: translateX(-30px) scale(0.95);
+    filter: blur(4px);
+  }
+  60% {
+    filter: blur(0);
+  }
+  100% {
     opacity: 1;
-    transform: translateY(0);
+    transform: translateX(0) scale(1);
+    filter: blur(0);
   }
 }
-@keyframes rmPulse {
-  0%, 100% {
+
+@keyframes rmPop {
+  0% {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+    filter: blur(4px);
+  }
+  60% {
+    transform: translateY(-4px) scale(1.02);
+    filter: blur(0);
+  }
+  100% {
     opacity: 1;
-    transform: scale(1);
+    transform: translateY(0) scale(1);
+    filter: blur(0);
   }
-  50% {
-    opacity: 0.5;
-    transform: scale(1.3);
+}
+
+@keyframes rmSlideRight {
+  0% {
+    opacity: 0;
+    transform: translateX(30px);
+    filter: blur(4px);
   }
+  60% {
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0);
+    filter: blur(0);
+  }
+}
+
+@keyframes rmGlowGreen {
+  0%, 100% { box-shadow: 0 0 6px rgba(152, 195, 121, 0.3); }
+  50% { box-shadow: 0 0 14px rgba(152, 195, 121, 0.7), 0 0 30px rgba(152, 195, 121, 0.15); }
+}
+
+@keyframes rmGlowYellow {
+  0%, 100% { box-shadow: 0 0 8px rgba(229, 192, 123, 0.4); }
+  50% { box-shadow: 0 0 16px rgba(229, 192, 123, 0.8), 0 0 40px rgba(229, 192, 123, 0.2); }
+}
+
+@keyframes rmGlowGray {
+  0%, 100% { box-shadow: 0 0 4px rgba(255,255,255,0.05); }
+  50% { box-shadow: 0 0 10px rgba(255,255,255,0.15), 0 0 20px rgba(255,255,255,0.05); }
 }
 
 /* ── Feature Card Icons ── */
