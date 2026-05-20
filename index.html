@@ -32,6 +32,9 @@
     </div>
     <div class="hero-content">
       <div class="hero-badge">Freestanding Hobby-Kernel</div>
+      <div class="hero-logo">
+        <img src="assets/ronin-logo.svg" alt="RōninOS Logo" class="hero-logo-img">
+      </div>
       <h1>
         <span class="hero-title-main">RōninOS</span>
         <span class="hero-title-sub">Ein Kernel, geschrieben in C</span>
@@ -49,26 +52,70 @@
         <a href="#build" class="btn-secondary">Build & Run</a>
       </div>
     </div>
-    <div class="hero-terminal">
-      <div class="terminal-header">
-        <span class="terminal-dot red"></span>
-        <span class="terminal-dot yellow"></span>
-        <span class="terminal-dot green"></span>
-        <span class="terminal-title">root@roninos:~</span>
-      </div>
-      <div class="terminal-body">
-        <pre>> <span class="t-green">bootinfo</span></pre>
-        <pre>Bootloader: GRUB 2.x (Multiboot2)</pre>
-        <pre>Memory:    248 MiB available</pre>
-        <pre>Framebuffer: 1024x768 @ 32bpp</pre>
-        <pre>> <span class="t-green">uname</span></pre>
-        <pre>RōninOS v0.1 (x86, freestanding)</pre>
-        <pre>> <span class="t-green">ps</span></pre>
-        <pre>PID  STATE  NAME</pre>
-        <pre>  0  RUN    idle</pre>
-        <pre>  1  SLEEP  shell</pre>
-        <pre>  2  READY  worker_0</pre>
-        <pre><span class="t-cyan">█</span></pre>
+    <div class="hero-preview">
+      <div class="desktop-preview booting" aria-label="Animierte RoninOS Boot Vorschau">
+        <div class="boot-screen" aria-hidden="true">
+          <div class="boot-mark">
+            <img src="assets/roninos-welcome-128.png" alt="">
+          </div>
+          <div class="boot-log">
+            <span>GRUB loading /boot/roninos.elf</span>
+            <span>multiboot2: framebuffer tag found</span>
+            <span>pmm: memory map parsed</span>
+            <span>vfs: mounting ramfs at /</span>
+            <span>initrd: /initrd mounted read-only</span>
+            <span>scheduler: PIT preemption enabled</span>
+            <span>gui: taskbar, windows, widgets online</span>
+          </div>
+          <div class="boot-progress"><span></span></div>
+        </div>
+
+        <div class="desktop-topbar">
+          <span>RoninOS initrd online</span>
+          <span>100Hz PIT · TSS · Ring 3</span>
+        </div>
+        <div class="desktop-body">
+          <div class="window terminal-window">
+            <div class="window-titlebar">
+              <span>terminal</span>
+              <div class="traffic" aria-hidden="true"><span></span><span></span><span></span></div>
+            </div>
+            <pre class="terminal"><span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ bootinfo</span>
+<span class="terminal-line"><span class="ok">[OK]</span> Multiboot2 header verified</span>
+<span class="terminal-line"><span class="ok">[OK]</span> Framebuffer console active</span>
+<span class="terminal-line"><span class="ok">[OK]</span> VFS mounted at /</span>
+<span class="terminal-line"><span class="ok">[OK]</span> Initrd mounted at /initrd</span>
+
+<span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ help</span>
+<span class="terminal-line">about bootinfo cpuinfo disk fat32 grep hexdump</span>
+<span class="terminal-line">less meminfo procmon run startgui test_fault wc</span>
+
+<span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ startgui</span>
+<span class="terminal-line"><span class="warn">desktop</span> window manager started</span></pre>
+          </div>
+
+          <div class="window secondary file-window">
+            <div class="window-titlebar">
+              <span>initrd:/res</span>
+              <div class="traffic" aria-hidden="true"><span></span><span></span><span></span></div>
+            </div>
+            <div class="file-list">
+              <div><span>kernel/</span><strong>apps, fs, mem, sched, ui</strong></div>
+              <div><span>userspace/</span><strong>hello, cat, clear, hexdump</strong></div>
+              <div><span>docs/</span><strong>boot, memory, scheduler</strong></div>
+              <div><span>tools/</span><strong>qemu, uefi, usb image</strong></div>
+            </div>
+          </div>
+        </div>
+        <div class="desktop-taskbar">
+          <div class="taskbar-left">
+            <img src="assets/roninos-start-icon.png" alt="">
+            <span class="taskbar-item active">terminal</span>
+            <span class="taskbar-item">files</span>
+            <span class="taskbar-item">paint</span>
+          </div>
+          <span class="taskbar-item">ready</span>
+        </div>
       </div>
     </div>
   </header>

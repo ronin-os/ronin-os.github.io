@@ -745,9 +745,353 @@ h1 {
 .t-red { color: var(--red); }
 .t-purple { color: var(--purple); }
 
+/* ── Hero Logo ── */
+.hero-logo {
+  margin-bottom: 1rem;
+}
+.hero-logo-img {
+  width: 80px;
+  height: auto;
+  filter: drop-shadow(0 0 20px rgba(0, 122, 204, 0.3));
+}
+
+/* ── Desktop Preview ── */
+.hero-preview {
+  position: absolute;
+  right: 1.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 520px;
+  z-index: 1;
+}
+
+.desktop-preview {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 8px;
+  overflow: hidden;
+  background:
+    linear-gradient(180deg, rgba(17, 20, 23, 0.24), rgba(17, 20, 23, 0.55)),
+    url("assets/roninos-wallpaper.jpg") center / cover;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+}
+
+.booting .desktop-topbar,
+.booting .desktop-body,
+.booting .desktop-taskbar {
+  opacity: 0;
+  animation: desktopReveal 900ms ease forwards;
+  animation-delay: 6.8s;
+}
+
+.boot-screen {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: grid;
+  align-content: center;
+  gap: 18px;
+  padding: clamp(18px, 4vw, 38px);
+  background:
+    linear-gradient(180deg, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.88)),
+    radial-gradient(circle at 50% 35%, rgba(0, 122, 204, 0.2), transparent 42%),
+    #050607;
+  animation: bootExit 900ms ease forwards;
+  animation-delay: 6.45s;
+}
+
+.boot-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.045) 0, rgba(255, 255, 255, 0.045) 1px, transparent 1px, transparent 4px);
+  opacity: 0.28;
+  pointer-events: none;
+  animation: scanDrift 900ms linear infinite;
+}
+
+.boot-mark {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 88px;
+  height: 88px;
+  margin: 0 auto;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 0 0 0 rgba(0, 122, 204, 0.4);
+  animation: bootPulse 1.4s ease-in-out infinite;
+}
+
+.boot-mark img {
+  width: 62px;
+  height: 62px;
+}
+
+.boot-log {
+  position: relative;
+  display: grid;
+  gap: 7px;
+  max-width: 540px;
+  margin: 0 auto;
+  color: #d4d4d4;
+  font-family: var(--font-mono);
+  font-size: 0.79rem;
+}
+
+.boot-log span {
+  opacity: 0;
+  transform: translateY(7px);
+  animation: bootLine 420ms ease forwards;
+}
+
+.boot-log span::before {
+  content: "[OK] ";
+  color: #27c93f;
+}
+
+.boot-log span:nth-child(1) { animation-delay: 450ms; }
+.boot-log span:nth-child(2) { animation-delay: 1050ms; }
+.boot-log span:nth-child(3) { animation-delay: 1650ms; }
+.boot-log span:nth-child(4) { animation-delay: 2250ms; }
+.boot-log span:nth-child(5) { animation-delay: 2850ms; }
+.boot-log span:nth-child(6) { animation-delay: 3450ms; }
+.boot-log span:nth-child(7) { animation-delay: 4050ms; }
+
+.boot-progress {
+  position: relative;
+  width: min(420px, 100%);
+  height: 8px;
+  margin: 4px auto 0;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.boot-progress span {
+  display: block;
+  width: 0;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #007acc, #7cc7ff, #27c93f);
+  box-shadow: 0 0 24px rgba(0, 122, 204, 0.55);
+  animation: bootProgress 5.6s cubic-bezier(0.65, 0, 0.18, 1) forwards;
+  animation-delay: 550ms;
+}
+
+.desktop-topbar,
+.window-titlebar,
+.desktop-taskbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.desktop-topbar {
+  justify-content: space-between;
+  min-height: 40px;
+  padding: 0 13px;
+  background: rgba(37, 37, 38, 0.94);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.14);
+  color: #a5acb7;
+  font-family: var(--font-mono);
+  font-size: 0.76rem;
+}
+
+.desktop-body {
+  display: grid;
+  grid-template-columns: 1fr 0.8fr;
+  gap: 16px;
+  min-height: 470px;
+  padding: 22px;
+}
+
+.window {
+  align-self: start;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 8px;
+  background: rgba(30, 30, 30, 0.94);
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.34);
+}
+
+.window.secondary {
+  margin-top: 54px;
+}
+
+.window-titlebar {
+  justify-content: space-between;
+  min-height: 34px;
+  padding: 0 10px;
+  background: #2a2c33;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 750;
+}
+
+.traffic {
+  display: flex;
+  gap: 7px;
+}
+
+.traffic span {
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+}
+
+.traffic span:nth-child(1) { background: #ff5f56; }
+.traffic span:nth-child(2) { background: #ffbd2e; }
+.traffic span:nth-child(3) { background: #27c93f; }
+
+.terminal {
+  margin: 0;
+  padding: 18px;
+  color: #d4d4d4;
+  font-family: var(--font-mono);
+  font-size: 0.86rem;
+  line-height: 1.75;
+  white-space: pre-wrap;
+}
+
+.terminal-line {
+  display: inline-block;
+  opacity: 0;
+  transform: translateX(-5px);
+  animation: terminalLine 360ms ease forwards;
+}
+
+.terminal-line:nth-of-type(1) { animation-delay: 7.2s; }
+.terminal-line:nth-of-type(2) { animation-delay: 7.35s; }
+.terminal-line:nth-of-type(3) { animation-delay: 7.5s; }
+.terminal-line:nth-of-type(4) { animation-delay: 7.65s; }
+.terminal-line:nth-of-type(5) { animation-delay: 7.8s; }
+.terminal-line:nth-of-type(6) { animation-delay: 7.95s; }
+.terminal-line:nth-of-type(7) { animation-delay: 8.1s; }
+.terminal-line:nth-of-type(8) { animation-delay: 8.25s; }
+.terminal-line:nth-of-type(9) { animation-delay: 8.4s; }
+.terminal-line:nth-of-type(10) { animation-delay: 8.55s; }
+.terminal-line:nth-of-type(11) { animation-delay: 8.7s; }
+
+.terminal .prompt { color: #27c93f; }
+.terminal .ok { color: #7cc7ff; }
+.terminal .warn { color: #ffbd2e; }
+
+.file-list {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 16px;
+}
+
+.file-list div {
+  display: grid;
+  grid-template-columns: 84px 1fr;
+  gap: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.045);
+  color: #d4d4d4;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+}
+
+.file-list span { color: #d8a657; }
+
+.desktop-taskbar {
+  justify-content: space-between;
+  min-height: 42px;
+  padding: 0 12px;
+  background: rgba(60, 60, 60, 0.94);
+  border-top: 1px solid rgba(255, 255, 255, 0.14);
+}
+
+.taskbar-left {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.taskbar-left img {
+  width: 24px;
+  height: 24px;
+}
+
+.taskbar-item {
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 5px;
+  padding: 5px 10px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #d4d4d4;
+  font-size: 0.78rem;
+  font-weight: 750;
+}
+
+/* ── Keyframes ── */
+@keyframes bootPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(0, 122, 204, 0.22), 0 0 30px rgba(255, 255, 255, 0.08);
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 0 12px rgba(0, 122, 204, 0), 0 0 44px rgba(0, 122, 204, 0.34);
+    transform: scale(1.035);
+  }
+}
+
+@keyframes bootLine {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes bootProgress {
+  0% { width: 0; }
+  18% { width: 17%; }
+  38% { width: 45%; }
+  67% { width: 74%; }
+  100% { width: 100%; }
+}
+
+@keyframes bootExit {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+    transform: scale(1.025);
+  }
+}
+
+@keyframes desktopReveal {
+  to { opacity: 1; }
+}
+
+@keyframes terminalLine {
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes scanDrift {
+  to { transform: translateY(4px); }
+}
+
 /* ── Responsive ── */
+@media (max-width: 1100px) {
+  .hero-preview { display: none; }
+}
+
 @media (max-width: 1024px) {
-  .hero-terminal { display: none; }
   .hero-content { max-width: 100%; text-align: center; }
   .hero-actions { justify-content: center; }
   .hero-desc { margin-left: auto; margin-right: auto; }
@@ -757,6 +1101,7 @@ h1 {
 @media (max-width: 768px) {
   .nav-links { display: none; }
 
+  .hero-logo-img { width: 60px; }
   .hero-title-main { font-size: 2.5rem; }
   .hero-title-sub { font-size: 1rem; }
 
@@ -769,5 +1114,29 @@ h1 {
 
 @media (max-width: 480px) {
   .section { padding: 3rem 1rem; }
+  .hero-logo-img { width: 48px; }
   .hero-title-main { font-size: 2rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 1ms !important;
+  }
+
+  .boot-screen {
+    display: none;
+  }
+
+  .booting .desktop-topbar,
+  .booting .desktop-body,
+  .booting .desktop-taskbar,
+  .terminal-line {
+    opacity: 1;
+    transform: none;
+  }
 }
