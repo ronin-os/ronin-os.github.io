@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RōninOS ⚔️</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="nav-inner">
+      <a href="#" class="nav-logo">
+        <span class="logo-icon">⚔️</span>
+        <span class="logo-text">RōninOS</span>
+      </a>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#architecture">Architektur</a>
+        <a href="#commands">Shell</a>
+        <a href="#filesystems">Dateisysteme</a>
+        <a href="#build">Build & Run</a>
+      </div>
+      <a href="https://github.com/MachuraHarry/RoninOS" class="btn-ghost" target="_blank">GitHub</a>
+    </div>
+  </nav>
+
+  <header class="hero">
+    <div class="hero-bg">
+      <div class="hero-grid"></div>
+    </div>
+    <div class="hero-content">
+      <div class="hero-badge">Freestanding Hobby-Kernel</div>
+      <h1>
+        <span class="hero-title-main">RōninOS</span>
+        <span class="hero-title-sub">Ein Kernel, geschrieben in C</span>
+      </h1>
+      <p class="hero-desc">
+        Kompakt, nachvollziehbar, erweiterbar. Ein didaktischer x86-Kernel
+        mit eigener Shell, RAM-Dateisystem, FAT32-Unterstützung,
+        Scheduler und Framebuffer-Konsole.
+      </p>
+      <div class="hero-actions">
+        <a href="https://github.com/MachuraHarry/RoninOS" class="btn-primary" target="_blank">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+        <a href="#build" class="btn-secondary">Build & Run</a>
+      </div>
+    </div>
+    <div class="hero-terminal">
+      <div class="terminal-header">
+        <span class="terminal-dot red"></span>
+        <span class="terminal-dot yellow"></span>
+        <span class="terminal-dot green"></span>
+        <span class="terminal-title">root@roninos:~</span>
+      </div>
+      <div class="terminal-body">
+        <pre>> <span class="t-green">bootinfo</span></pre>
+        <pre>Bootloader: GRUB 2.x (Multiboot2)</pre>
+        <pre>Memory:    248 MiB available</pre>
+        <pre>Framebuffer: 1024x768 @ 32bpp</pre>
+        <pre>> <span class="t-green">uname</span></pre>
+        <pre>RōninOS v0.1 (x86, freestanding)</pre>
+        <pre>> <span class="t-green">ps</span></pre>
+        <pre>PID  STATE  NAME</pre>
+        <pre>  0  RUN    idle</pre>
+        <pre>  1  SLEEP  shell</pre>
+        <pre>  2  READY  worker_0</pre>
+        <pre><span class="t-cyan">█</span></pre>
+      </div>
+    </div>
+  </header>
+
+  <section id="features" class="section">
+    <div class="section-inner">
+      <h2 class="section-title">Features</h2>
+      <p class="section-sub">Was RōninOS alles kann – kompakt und übersichtlich.</p>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon shell">λ</div>
+          <h3>Eigene Shell</h3>
+          <p>Kommando-Parser mit Builtins, Apps, Prompt und Statuszeile. Mit Framebuffer- und VGA-Text-Konsole.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon files">📁</div>
+          <h3>RAM-Dateisystem</h3>
+          <p>Schnelles In-Memory-Dateisystem mit touch, write, cat, cp, mv, rm. Ideal für Tests und temporäre Daten.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon fat">💾</div>
+          <h3>FAT32</h3>
+          <p>Eigene FAT32-Implementierung auf generischem Blockdevice-Layer mit format, mount, ls, write, read, delete.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon sched">⚡</div>
+          <h3>Preemptives Scheduling</h3>
+          <p>Thread-Erzeugung, Yield, Timer-basiertes Preempting und Prozess-Introspektion via ps, spawn, procmon.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon fb">🖥️</div>
+          <h3>Framebuffer-Konsole</h3>
+          <p>Dynamisches Raster aus FB-Größe und Font-Zellgröße. ANSI-Farben, 8×16 Standard-Font, optional 16×32.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon uefi">🔌</div>
+          <h3>UEFI & BIOS Boot</h3>
+          <p>Multiboot2-kompatibel. Bootet via BIOS-ISO, UEFI-FAT-Image oder partitioniertem USB-Image mit GRUB.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon diag">🔍</div>
+          <h3>Diagnose-Tools</h3>
+          <p>Exception-Dumps, Register-Ausgabe, bootinfo, meminfo, disk-Diagnose und manuelle Fault-Tests.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon vfs">🔗</div>
+          <h3>VFS mit Initrd</h3>
+          <p>Virtuelles Dateisystem mit Root-RAMFS und read-only Initrd-Mount. Multiboot2-Module werden sichtbar.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="architecture" class="section section-dark">
+    <div class="section-inner">
+      <h2 class="section-title">Architektur</h2>
+      <p class="section-sub">Der Aufbau von RōninOS – sauber getrennt und erweiterbar.</p>
+      <div class="arch-grid">
+        <div class="arch-card">
+          <h3>kernel/</h3>
+          <ul>
+            <li><span class="t-blue">apps/</span> – Shell-Applikationen</li>
+            <li><span class="t-blue">fs/</span> – Dateisysteme (ramfs, fat32)</li>
+            <li><span class="t-blue">lib/</span> – Freestanding-Hilfsbibliothek</li>
+            <li><span class="t-blue">mem/</span> – Paging, PMM, Heap</li>
+            <li><span class="t-blue">sched/</span> – Thread- & Scheduler-Logik</li>
+            <li><span class="t-blue">shell/</span> – Parser, Builtins, Apps</li>
+            <li><span class="t-blue">terminal/</span> – VGA/Framebuffer-Terminal</li>
+          </ul>
+        </div>
+        <div class="arch-card">
+          <h3>boot/</h3>
+          <ul>
+            <li><span class="t-blue">uefi/</span> – UEFI-Loader & Buildregeln</li>
+            <li><span class="t-blue">grub/</span> – GRUB-Konfiguration</li>
+          </ul>
+          <h3 style="margin-top:1.5rem">tools/</h3>
+          <ul>
+            <li><span class="t-blue">scripts/</span> – QEMU-Hilfsskripte, Docker-Build</li>
+          </ul>
+        </div>
+        <div class="arch-card arch-flow">
+          <h3>Boot-Ablauf</h3>
+          <div class="flow">
+            <div class="flow-step">BIOS / UEFI</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">GRUB (Multiboot2)</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">Kernel-Entry</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">Paging / GDT / IDT</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">Heap / Scheduler / VFS</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">Shell 🚀</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="commands" class="section">
+    <div class="section-inner">
+      <h2 class="section-title">Shell-Kommandos</h2>
+      <p class="section-sub">Die RōninOS-Shell bietet Builtins und Apps für alles Wesentliche.</p>
+      <div class="cmd-grid">
+        <div class="cmd-col">
+          <h3>Builtins</h3>
+          <div class="cmd-list">
+            <div class="cmd-item"><code>help</code><span>Zeigt alle Befehle</span></div>
+            <div class="cmd-item"><code>clear</code><span>Bildschirm leeren</span></div>
+            <div class="cmd-item"><code>echo</code><span>Text ausgeben</span></div>
+            <div class="cmd-item"><code>uname</code><span>OS-Name/Version</span></div>
+            <div class="cmd-item"><code>mem</code><span>Speicherinfo</span></div>
+            <div class="cmd-item"><code>uptime</code><span>Laufzeit anzeigen</span></div>
+            <div class="cmd-item"><code>reboot</code><span>Neustart</span></div>
+          </div>
+        </div>
+        <div class="cmd-col">
+          <h3>Apps</h3>
+          <div class="cmd-list">
+            <div class="cmd-item"><code>about</code><span>Kernel-Info</span></div>
+            <div class="cmd-item"><code>bootinfo</code><span>Boot-Diagnose</span></div>
+            <div class="cmd-item"><code>meminfo</code><span>Heap-Details</span></div>
+            <div class="cmd-item"><code>heap_test</code><span>Allokator-Test</span></div>
+            <div class="cmd-item"><code>ps</code><span>Thread-Tabelle</span></div>
+            <div class="cmd-item"><code>spawn</code><span>Worker-Threads</span></div>
+            <div class="cmd-item"><code>procmon</code><span>Prozess-Snapshot</span></div>
+          </div>
+        </div>
+        <div class="cmd-col">
+          <h3>Dateisysteme</h3>
+          <div class="cmd-list">
+            <div class="cmd-item"><code>ls [path]</code><span>Verzeichnis listen</span></div>
+            <div class="cmd-item"><code>cat &lt;path&gt;</code><span>Datei ausgeben</span></div>
+            <div class="cmd-item"><code>cd [path]</code><span>Verzeichnis wechseln</span></div>
+            <div class="cmd-item"><code>fs &lt;cmd&gt;</code><span>RAMFS-Befehle</span></div>
+            <div class="cmd-item"><code>fat32 &lt;cmd&gt;</code><span>FAT32-Befehle</span></div>
+            <div class="cmd-item"><code>disk</code><span>Blockdevices</span></div>
+            <div class="cmd-item"><code>test_fault</code><span>Exception-Test</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="filesystems" class="section section-dark">
+    <div class="section-inner">
+      <h2 class="section-title">Dateisysteme</h2>
+      <p class="section-sub">Zwei Dateisysteme – ein VFS.</p>
+      <div class="fs-cards">
+        <div class="fs-card">
+          <h3>RAMFS <span class="fs-badge">In-Memory</span></h3>
+          <p>Das Root-Dateisystem liegt vollständig im RAM. Perfekt für schnelle Experimente.</p>
+          <pre class="fs-code"><span class="t-green">fs touch</span> test.txt
+<span class="t-green">fs write</span> test.txt "Hello RoninOS"
+<span class="t-green">fs cat</span> test.txt
+<span class="t-green">fs rm</span> test.txt</pre>
+        </div>
+        <div class="fs-card">
+          <h3>FAT32 <span class="fs-badge">Block Device</span></h3>
+          <p>Eigene FAT32-Implementierung auf ATA-PIO-Blockdevices mit 8.3-Dateinamen.</p>
+          <pre class="fs-code"><span class="t-green">fat32 format</span> hd0 --yes
+<span class="t-green">fat32 write</span> NOTE.TXT "Hallo"
+<span class="t-green">fat32 cat</span> NOTE.TXT
+<span class="t-green">fat32 rm</span> NOTE.TXT</pre>
+        </div>
+        <div class="fs-card">
+          <h3>VFS + Initrd <span class="fs-badge">Virtuell</span></h3>
+          <p>Einheitliche Schnittstelle: RAMFS als Root, Multiboot2-Module unter /initrd read-only.</p>
+          <pre class="fs-code"><span class="t-green">ls</span> /
+<span class="t-green">cd</span> /initrd
+<span class="t-green">cat</span> /initrd/banner.txt</pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="screenshots" class="section">
+    <div class="section-inner">
+      <h2 class="section-title">Screenshots</h2>
+      <p class="section-sub">Ein Blick auf RōninOS in Aktion.</p>
+      <div class="screenshot-grid">
+        <div class="screenshot-card">
+          <div class="screenshot-placeholder">
+            <div class="mock-terminal">
+              <div class="mock-header">
+                <span class="mock-dot red"></span>
+                <span class="mock-dot yellow"></span>
+                <span class="mock-dot green"></span>
+                <span class="mock-title">RōninOS – Framebuffer Console</span>
+              </div>
+              <div class="mock-body">
+                <pre>                    <span class="t-yellow">╔══════════════════════════╗</span></pre>
+                <pre>                    <span class="t-yellow">║</span>   WELCOME TO RŌNINOS    <span class="t-yellow">║</span></pre>
+                <pre>                    <span class="t-yellow">╚══════════════════════════╝</span></pre>
+                <pre></pre>
+                <pre>Available memory: 248 MiB</pre>
+                <pre>Framebuffer: 1024x768 @ 32bpp</pre>
+                <pre>Root FS: RAMFS</pre>
+                <pre></pre>
+                <pre><span class="t-green">root@roninos:/$</span> <span class="t-cyan">bootinfo</span></pre>
+                <pre><span class="t-green">root@roninos:/$</span> <span class="t-cyan">disk</span></pre>
+                <pre>hd0  ATA  512B/sector  2097152 sectors  1.00 GiB</pre>
+                <pre><span class="t-green">root@roninos:/$</span> <span class="t-cyan">█</span></pre>
+              </div>
+            </div>
+          </div>
+          <p class="screenshot-caption">Framebuffer-Konsole nach dem Boot</p>
+        </div>
+        <div class="screenshot-card">
+          <div class="screenshot-placeholder">
+            <div class="mock-window">
+              <div class="mock-win-header">
+                <span class="mock-dot red"></span>
+                <span class="mock-dot yellow"></span>
+                <span class="mock-dot green"></span>
+                <span class="mock-win-title">Terminal — fat32 shell</span>
+              </div>
+              <div class="mock-win-body">
+                <pre><span class="t-green">root@roninos:/$</span> <span class="t-cyan">fat32 format hd0 --yes</span></pre>
+                <pre>Formatting hd0 as FAT32... OK</pre>
+                <pre><span class="t-green">root@roninos:/$</span> <span class="t-cyan">fat32 write TEST.TXT "Hello World"</span></pre>
+                <pre>Wrote 11 bytes to TEST.TXT</pre>
+                <pre><span class="t-green">root@roninos:/$</span> <span class="t-cyan">fat32 cat TEST.TXT</span></pre>
+                <pre>Hello World</pre>
+                <pre><span class="t-green">root@roninos:/$</span> <span class="t-cyan">fat32 ls</span></pre>
+                <pre>TEST.TXT       11 B</pre>
+                <pre><span class="t-green">root@roninos:/$</span> <span class="t-cyan">█</span></pre>
+              </div>
+            </div>
+          </div>
+          <p class="screenshot-caption">FAT32-Shell – Erstellen, Lesen, Auflisten</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="build" class="section section-dark">
+    <div class="section-inner">
+      <h2 class="section-title">Build & Run</h2>
+      <p class="section-sub">So startest du RōninOS auf deinem Rechner.</p>
+      <div class="build-steps">
+        <div class="build-step">
+          <div class="step-num">1</div>
+          <div class="step-content">
+            <h3>Repository klonen</h3>
+            <pre><code class="language-bash">git clone https://github.com/MachuraHarry/RoninOS.git
+cd RoninOS</code></pre>
+          </div>
+        </div>
+        <div class="build-step">
+          <div class="step-num">2</div>
+          <div class="step-content">
+            <h3>Build (BIOS / ISO)</h3>
+            <pre><code class="language-bash">make clean && make</code></pre>
+          </div>
+        </div>
+        <div class="build-step">
+          <div class="step-num">3</div>
+          <div class="step-content">
+            <h3>In QEMU starten</h3>
+            <pre><code class="language-bash">make run</code></pre>
+          </div>
+        </div>
+        <div class="build-step">
+          <div class="step-num">4</div>
+          <div class="step-content">
+            <h3>UEFI-Build & Run</h3>
+            <pre><code class="language-bash">make uefi-image
+make uefi-run</code></pre>
+          </div>
+        </div>
+        <div class="build-step">
+          <div class="step-num">5</div>
+          <div class="step-content">
+            <h3>Docker-Build (empfohlen)</h3>
+            <pre><code class="language-bash">scripts/build.sh</code></pre>
+          </div>
+        </div>
+      </div>
+      <div class="deps">
+        <h3>Benötigte Pakete</h3>
+        <div class="deps-tabs">
+          <div class="deps-tab active" data-distro="ubuntu">Ubuntu/Debian</div>
+          <div class="deps-tab" data-distro="arch">Arch Linux</div>
+          <div class="deps-tab" data-distro="fedora">Fedora</div>
+        </div>
+        <div class="deps-content" id="deps-ubuntu">
+          <pre><code>sudo apt install -y \
+  git make gcc binutils xorriso grub-pc-bin grub-common \
+  grub-efi-amd64-bin qemu-system-x86 qemu-utils \
+  gnu-efi mtools dosfstools ovmf</code></pre>
+        </div>
+        <div class="deps-content hidden" id="deps-arch">
+          <pre><code>sudo pacman -Syu --needed \
+  git base-devel x86_64-elf-gcc x86_64-elf-binutils \
+  grub xorriso qemu-system-x86 qemu-img \
+  gnu-efi mtools dosfstools edk2-ovmf</code></pre>
+        </div>
+        <div class="deps-content hidden" id="deps-fedora">
+          <pre><code>sudo dnf install -y \
+  git make gcc binutils xorriso grub2-tools grub2-tools-extra \
+  qemu-system-x86 qemu-img gnu-efi-devel mtools dosfstools edk2-ovmf</code></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="docker" class="section">
+    <div class="section-inner">
+      <h2 class="section-title">Docker Build</h2>
+      <p class="section-sub">Reproduzierbarer Build für alle Distributionen.</p>
+      <div class="docker-card">
+        <div class="docker-icon">🐳</div>
+        <p>Das Build-Image enthält die Cross-Toolchain und alle nötigen Werkzeuge – kein manuelles Setup erforderlich.</p>
+        <pre><code class="language-bash">sudo apt install -y git docker.io
+sudo usermod -aG docker "$USER"
+# Danach neu einloggen
+git clone https://github.com/MachuraHarry/RoninOS.git
+cd RoninOS
+scripts/build.sh</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-main">
+        <div class="footer-brand">
+          <span class="logo-icon">⚔️</span>
+          <span>RōninOS</span>
+        </div>
+        <p class="footer-desc">Ein didaktischer Hobby-Kernel in C – nachvollziehbar, erweiterbar, frei.</p>
+        <div class="footer-links">
+          <a href="https://github.com/MachuraHarry/RoninOS" target="_blank">GitHub</a>
+          <a href="https://github.com/MachuraHarry/RoninOS/issues" target="_blank">Issues</a>
+          <a href="https://github.com/MachuraHarry/RoninOS/discussions" target="_blank">Discussions</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>MIT License</span>
+        <span>·</span>
+        <span>Built with ⚔️ by <a href="https://github.com/MachuraHarry">MachuraHarry</a></span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
