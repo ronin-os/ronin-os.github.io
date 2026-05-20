@@ -1001,8 +1001,9 @@ h1 {
   border-left: 3px solid var(--yellow);
 }
 .roadmap-heading.future {
-  color: var(--text-muted);
-  border-left: 3px solid var(--bg-surface);
+  color: var(--cyan);
+  border-left: 3px solid var(--cyan);
+  background: rgba(86, 182, 194, 0.06);
 }
 
 /* ── Roadmap Items Container ── */
@@ -1072,10 +1073,13 @@ h1 {
 
 .roadmap-col:nth-child(2) .roadmap-item:nth-child(1) { animation-delay: 0.1s; }
 .roadmap-col:nth-child(2) .roadmap-item:nth-child(2) { animation-delay: 0.2s; }
+.roadmap-col:nth-child(2) .roadmap-item:nth-child(3) { animation-delay: 0.3s; }
 
-.roadmap-col:nth-child(3) .roadmap-item:nth-child(1) { animation-delay: 0.15s; }
-.roadmap-col:nth-child(3) .roadmap-item:nth-child(2) { animation-delay: 0.25s; }
-.roadmap-col:nth-child(3) .roadmap-item:nth-child(3) { animation-delay: 0.35s; }
+.roadmap-col:nth-child(3) .roadmap-item:nth-child(1) { animation-delay: 0.1s; }
+.roadmap-col:nth-child(3) .roadmap-item:nth-child(2) { animation-delay: 0.18s; }
+.roadmap-col:nth-child(3) .roadmap-item:nth-child(3) { animation-delay: 0.26s; }
+.roadmap-col:nth-child(3) .roadmap-item:nth-child(4) { animation-delay: 0.34s; }
+.roadmap-col:nth-child(3) .roadmap-item:nth-child(5) { animation-delay: 0.42s; }
 
 /* ── Hover: schwebt leicht + Akzent-Glow ── */
 .roadmap-item::before {
@@ -1129,11 +1133,11 @@ h1 {
   animation: rmGlowYellow 1.5s ease-in-out 0.4s infinite;
 }
 .rm-status.future {
-  background: var(--bg-surface);
-  border: 1px solid var(--border);
+  background: var(--cyan);
+  box-shadow: 0 0 6px rgba(86, 182, 194, 0.3);
 }
 .roadmap-visible .rm-status.future {
-  animation: rmGlowGray 2.5s ease-in-out 1.2s infinite;
+  animation: rmGlowCyan 2.5s ease-in-out 1.2s infinite;
 }
 
 .roadmap-item div {
@@ -1217,6 +1221,52 @@ h1 {
 @keyframes rmGlowGray {
   0%, 100% { box-shadow: 0 0 4px rgba(255,255,255,0.05); }
   50% { box-shadow: 0 0 10px rgba(255,255,255,0.15), 0 0 20px rgba(255,255,255,0.05); }
+}
+
+@keyframes rmGlowCyan {
+  0%, 100% { box-shadow: 0 0 6px rgba(86, 182, 194, 0.3); }
+  50% { box-shadow: 0 0 16px rgba(86, 182, 194, 0.8), 0 0 40px rgba(86, 182, 194, 0.2); }
+}
+
+/* ── Vision Section ── */
+.vision-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1rem;
+}
+
+.vision-card {
+  background: var(--bg-card);
+  border: 1px solid var(--bg-surface);
+  border-radius: 10px;
+  padding: 1.75rem 1.5rem;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.vision-card:hover {
+  border-color: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+}
+
+.vision-icon {
+  font-size: 2.25rem;
+  margin-bottom: 0.75rem;
+  line-height: 1;
+}
+
+.vision-card h3 {
+  font-size: 1.0625rem;
+  font-weight: 600;
+  color: var(--text-bright);
+  margin-bottom: 0.5rem;
+}
+
+.vision-card p {
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  line-height: 1.6;
 }
 
 /* ── Feature Card Icons ── */
