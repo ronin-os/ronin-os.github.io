@@ -26,8 +26,8 @@
 
   --desktop-bg: #4D7AC4;
 
-  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-  --font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+  --font-mono: 'DejaVu Sans Mono', 'Liberation Mono', 'Courier New', monospace;
 }
 
 html {
@@ -1231,42 +1231,73 @@ h1 {
 /* ── Vision Section ── */
 .vision-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.25rem;
+}
+
+@media (max-width: 1024px) {
+  .vision-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .vision-grid { grid-template-columns: 1fr; }
 }
 
 .vision-card {
-  background: var(--bg-card);
-  border: 1px solid var(--bg-surface);
-  border-radius: 10px;
-  padding: 1.75rem 1.5rem;
-  transition: all 0.2s;
-  text-align: center;
+  background: linear-gradient(135deg, var(--bg-card) 0%, rgba(45, 45, 45, 0.6) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 2rem 1.5rem;
+  transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+}
+
+.vision-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.vision-card:hover::before {
+  opacity: 1;
 }
 
 .vision-card:hover {
-  border-color: var(--accent);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  border-color: rgba(97, 175, 239, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(97, 175, 239, 0.05);
 }
 
 .vision-icon {
-  font-size: 2.25rem;
-  margin-bottom: 0.75rem;
+  font-size: 2rem;
+  margin-bottom: 1rem;
   line-height: 1;
+  display: inline-block;
+  background: rgba(97, 175, 239, 0.08);
+  padding: 0.5rem;
+  border-radius: 8px;
 }
 
 .vision-card h3 {
   font-size: 1.0625rem;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--text-bright);
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.625rem;
+  letter-spacing: -0.01em;
 }
 
 .vision-card p {
   font-size: 0.875rem;
-  color: var(--text-muted);
-  line-height: 1.6;
+  color: var(--text);
+  line-height: 1.65;
+  opacity: 0.85;
 }
 
 /* ── Feature Card Icons ── */

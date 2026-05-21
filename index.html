@@ -6,7 +6,7 @@
   <title>RōninOS 🛡️ – Sicheres, unabhängiges Open-Source-Betriebssystem</title>
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="assets/ronin-icon.svg">
 </head>
 <body>
@@ -42,12 +42,15 @@
         <span class="hero-title-sub">Auf dem Weg zu einem unabhängigen, sicheren Open-Source-Betriebssystem 🛡️</span>
       </h1>
       <p class="hero-desc">
-        RōninOS ist ein freestanding x86-Kernel – der Grundstein für ein vollständig
-        unabhängiges, quelloffenes Betriebssystem. Unser Ziel: ein OS, das niemandem
-        gehört, von der Community kontrolliert wird und Sicherheit & Verschlüsselung
-        von Grund mitdenkt. Aktuell bauen wir die Basis – Speicherverwaltung,
-        Scheduler, VFS mit RAMFS & FAT32, Framebuffer-Konsole – vollständig in C,
-        kompilierbar via Docker-Cross-Toolchain oder nativem x86_64-elf-GCC.
+        RōninOS ist ein freestanding x86-Kernel, entwickelt als Grundstein für ein
+        vollständig unabhängiges, quelloffenes Betriebssystem. Das Projekt verfolgt
+        einen Security-by-Design-Ansatz: Speicherisolierung, Verschlüsselung und
+        transparente Auditierbarkeit werden nicht als optionale Erweiterungen,
+        sondern als architektonische Kernanforderungen behandelt. Die aktuelle
+        Codebasis umfasst Speicherverwaltung (PMM, Paging, Heap), präemptives
+        Scheduling, VFS mit RAMFS und FAT32 sowie einen modernen Netzwerk-Stack (lwIP) –
+        vollständig in C, kompilierbar via Docker-Cross-Toolchain oder nativem
+        x86_64-elf-GCC.
       </p>
       <div class="hero-actions">
         <a href="https://github.com/MachuraHarry/RoninOS" class="btn-primary" target="_blank">
@@ -78,7 +81,7 @@
         <div class="desktop-content">
           <div class="desktop-topbar">
             <span>RoninOS — framebuffer console @ 1920x1080</span>
-            <span>100Hz PIT · multiboot2 · ATA PIO</span>
+            <span>100Hz PIT · lwIP Stack · Intel e1000 / RTL8139</span>
           </div>
           <div class="desktop-body">
             <div class="window terminal-window" style="grid-column:1/-1">
@@ -86,22 +89,22 @@
                 <span>terminal — framebuffer console</span>
                 <div class="traffic" aria-hidden="true"><span></span><span></span><span></span></div>
               </div>
-              <pre class="terminal"><span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ bootinfo</span>
+              <pre class="terminal"><span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ ping google.com</span>
+<span class="terminal-line">PING google.com (142.250.185.78): 56 data bytes</span>
+<span class="terminal-line">64 bytes from 142.250.185.78: icmp_seq=0 ttl=118 time=14.2 ms</span>
+<span class="terminal-line">64 bytes from 142.250.185.78: icmp_seq=1 ttl=118 time=15.1 ms</span>
+
+<span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ bootinfo</span>
 <span class="terminal-line"><span class="ok">[OK]</span> Multiboot2 header verified (0xE85250D6)</span>
-<span class="terminal-line"><span class="ok">[OK]</span> Framebuffer console active (8x16 font)</span>
+<span class="terminal-line"><span class="ok">[OK]</span> lwIP 2.1.3 initialized (DHCP active)</span>
 <span class="terminal-line"><span class="ok">[OK]</span> VFS mounted at /</span>
 <span class="terminal-line"><span class="ok">[OK]</span> Initrd mounted at /initrd</span>
 
 <span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ help</span>
 <span class="terminal-line">about   bootinfo  cat   cd   clear   disk   echo   fat32</span>
-<span class="terminal-line">fs      heap_test help  ls   mem     meminfo  preempt</span>
+<span class="terminal-line">fs      heap_test help  ls   mem     meminfo ping   preempt</span>
 <span class="terminal-line">procmon ps        pwd   reboot  spawn  test_fault  uname</span>
-<span class="terminal-line">uptime  yield</span>
-
-<span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ fat32 format hd0 --yes</span>
-<span class="terminal-line"><span class="ok">[OK]</span> FAT32 formatted on hd0</span>
-<span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ fat32 write NOTE.TXT "RoninOS rocks"</span>
-<span class="terminal-line"><span class="ok">[OK]</span> 17 bytes written</span></pre>
+<span class="terminal-line">uptime  yield</span></pre>
             </div>
           </div>
         </div>
@@ -112,27 +115,27 @@
   <section id="vision" class="section section-dark">
     <div class="section-inner">
       <h2 class="section-title">Unsere Vision 🎯</h2>
-      <p class="section-sub">Ein Betriebssystem aus der Community, für die Community – transparent, sicher und souverän.</p>
+      <p class="section-sub">Ein Betriebssystem, das Sicherheit und Souveränität nicht als Option, sondern als architektonisches Fundament betrachtet.</p>
       <div class="vision-grid">
         <div class="vision-card">
           <div class="vision-icon">🔓</div>
           <h3>100 % Open Source</h3>
-          <p>Jede Zeile Code gehört der Community. Keine黑箱, keine versteckten Backdoors – vollständige Transparenz von der Bootsequenz bis zur Anwendung.</p>
+          <p>Der vollständige Quellcode ist öffentlich einsehbar und auditierbar. Keine proprietären Binary-Blobs, keine versteckten Telemetrie-Komponenten – vollständige Transparenz von der Bootsequenz bis zur Anwendungsebene.</p>
         </div>
         <div class="vision-card">
           <div class="vision-icon">🔒</div>
           <h3>Security by Design</h3>
-          <p>Sicherheit ist kein nachträgliches Feature, sondern architektonisches Fundament. Von der Speicherisolierung über verschlüsselte Dateisysteme bis hin zu abgesicherten Userspace-Prozessen.</p>
+          <p>Sicherheit wird nicht als nachträgliches Feature implementiert, sondern ist integraler Bestandteil der Systemarchitektur. Speicherisolierung, gehärtete Userspace-Prozesse und minimales Privilegien-Modell bilden das Fundament.</p>
         </div>
         <div class="vision-card">
           <div class="vision-icon">🔑</div>
           <h3>Verschlüsselung als Standard</h3>
-          <p>Full-Disk-Encryption, signierte Updates und Ende-zu-Ende-verschlüsselte Kommunikation – deine Daten gehören dir, nicht dem OS-Hersteller.</p>
+          <p>Full-Disk-Encryption auf Block-Ebene, signierte Update-Ketten und Ende-zu-Ende-verschlüsselte Kommunikation. Der Benutzer behält die alleinige Kontrolle über seine Daten – der OS-Hersteller hat standardmäßig keinen Zugriff.</p>
         </div>
         <div class="vision-card">
           <div class="vision-icon">🌍</div>
           <h3>Unabhängig & Souverän</h3>
-          <p>Keine Konzernabhängigkeit, keine Telemetrie, kein Vendor-Lock-in. RōninOS läuft so, wie du es willst – auf deiner Hardware, unter deiner Kontrolle.</p>
+          <p>Keine Abhängigkeit von Konzernen, keine Telemetrie-Infrastruktur, kein Vendor-Lock-in. RōninOS läuft vollständig autark auf der Hardware des Benutzers – ohne externe Zugriffe oder verpflichtende Cloud-Dienste.</p>
         </div>
       </div>
     </div>
@@ -141,52 +144,57 @@
   <section id="features" class="section">
     <div class="section-inner">
       <h2 class="section-title">Kernkomponenten 🧱</h2>
-      <p class="section-sub">Neun modulare Bereiche – das technische Fundament, auf dem wir unsere Vision aufbauen.</p>
+      <p class="section-sub">Neun modulare Subsysteme, die das technische Fundament des Kernels bilden – von der Speicherverwaltung bis zur Dateisystemabstraktion.</p>
       <div class="features-grid">
         <div class="feature-card">
           <div class="feature-icon">01</div>
           <h3>Physical Memory Manager</h3>
-          <p>Bitmap-basierte 4-KiB-Frame-Verwaltung auf Basis der Multiboot2-Memory-Map. Reserviert Niedrigspeicher, Kernel-Image, Module und Framebuffer. Obergrenze: 512 MiB physikalischer Adressraum.</p>
+          <p>Bitmap-basierte 4-KiB-Frame-Verwaltung auf Basis der Multiboot2-Memory-Map. Reservierung von Low-Memory, Kernel-Image, Bootmodulen und Framebuffer. Unterstützt bis zu 512 MiB physikalischen Adressraum.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">02</div>
           <h3>Paging & Heap</h3>
-          <p>32-Bit-Paging mit Identity-Mapping und dynamisch allokierten Page Tables. Virtueller Heap bei 0x18000000 mit First-Fit-Freiliste, Split/Merge und Spinlock-Sicherung. Selbstexpansion via PMM.</p>
+          <p>32-Bit-Paging mit Identity-Mapping und dynamisch allokierten Page Tables. Virtueller Heap bei <code>0x18000000</code> mit First-Fit-Freiliste, Split/Merge-Mechanik und Spinlock-basierter Synchronisation. Automatische Expansion über den PMM.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">03</div>
           <h3>Thread-Scheduler</h3>
-          <p>Kooperatives Round-Robin mit optionalem PIT-basiertem Preempting (100 Hz). Threads mit eigenem kmalloc-Stack, Zustandsmaschine (RUNNABLE, SLEEP, ZOMBIE) und Introspektion via <code>ps</code> und <code>procmon</code>.</p>
+          <p>Kooperatives Round-Robin-Scheduling mit optionalem PIT-basiertem Preempting bei 100 Hz. Jeder Thread besitzt einen eigenen kmallozierten Stack sowie eine Zustandsmaschine (RUNNABLE, SLEEP, ZOMBIE). Introspektion über <code>ps</code> und <code>procmon</code>.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">04</div>
           <h3>VFS & Dateisysteme</h3>
-          <p>Einheitlicher VFS-Layer mit Path-Resolver, cwd und open/read/write-API. RAMFS als Root (<code>/</code>), Multiboot2-Module read-only unter <code>/initrd</code>. FAT32-Implementierung auf generischem Blockdevice-Layer.</p>
+          <p>Einheitliche Virtual-Filesystem-Schnittstelle mit Path-Resolver, Working-Directory und open/read/write-API. RAMFS als Root-Dateisystem (<code>/</code>), Multiboot2-Module read-only unter <code>/initrd</code>. FAT32-Implementierung auf generischem Blockdevice-Layer.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">05</div>
           <h3>Framebuffer-Konsole</h3>
-          <p>Dynamisches Raster aus Bildschirmauflösung und Font-Zellgröße. ANSI-Farben (VS-Code-Dark-Palette), 8x16-Standard-Font, optional 16x32. Debug-Overlay für FB-Parameter via <code>DEBUG=1</code>.</p>
+          <p>Dynamisch berechnetes Raster aus Bildschirmauflösung und Font-Zellgröße. ANSI-Farben in VS-Code-Dark-Palette, Standard-Font 8x16, optional 16x32. Diagnose-Overlay für Framebuffer-Parameter aktivierbar über <code>DEBUG=1</code>.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">06</div>
           <h3>Shell & App-System</h3>
-          <p>Eigener Kommando-Parser mit Builtins, registrierbaren Apps und VFS-Integration. App-Registry in <code>apps.c</code> – neue Programme durch <code>app_&lt;name&gt;_main()</code> und Tabelleneintrag.</p>
+          <p>Eigener Kommandozeilen-Parser mit Unterstützung für Builtins und registrierbare Applikationen. Die App-Registry in <code>apps.c</code> ermöglicht die Integration neuer Shell-Programme über die Funktion <code>app_&lt;name&gt;_main()</code> und einen Tabelleneintrag.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">07</div>
           <h3>Exception-Diagnose & Debugging</h3>
-          <p>Register-Dumps bei Kernel-Panics und User-Faults mit CPU-Registeranzeige, EIP/CS/EFLAGS und Kernel/User-Mode-Erkennung via CS. Manueller Exception-Test via <code>test_fault &lt;gp|pf|ud&gt;</code>.</p>
+          <p>Register-Dumps bei Kernel-Panics und User-Faults inklusive vollständiger CPU-Registeranzeige (EIP, CS, EFLAGS). Automatische Kernel/User-Mode-Erkennung über das CS-Segment. Manuelle Exception-Reproduktion via <code>test_fault &lt;gp|pf|ud&gt;</code>.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">08</div>
           <h3>UEFI & BIOS Boot</h3>
-          <p>Multiboot2-konformer Kernel-Header. BIOS-ISO, UEFI-Superfloppy-FAT32 und partitioniertes MBR/FAT32-USB-Image. GRUB mit gfxmode-Fallbackkette und <code>videoinfo</code>-Debug-Eintrag.</p>
+          <p>Multiboot2-konformer ELF-Kernel-Header. Build-Targets für BIOS-ISO (GRUB-mkrescue), UEFI-Superfloppy-FAT32 sowie partitionierte MBR/FAT32-USB-Images. GRUB-Konfiguration mit mehrstufiger gfxmode-Fallbackkette und <code>videoinfo</code>-Debug-Eintrag.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">09</div>
           <h3>Block-Devices & FAT32</h3>
-          <p>ATA PIO Block-Device-Discovery (Primary/Secondary, Master/Slave) mit generischem Blockdevice-Layer. Eigene FAT32-Implementierung mit Format, Mount, Read, Write und Delete im 8.3-Format.</p>
+          <p>ATA-PIO-basierte Block-Device-Discovery über Primary/Secondary-Bus und Master/Slave-Kanäle. Generischer Blockdevice-Layer als Abstraktionsschnittstelle. Eigene FAT32-Implementierung mit Formatieren, Mounten, Lesen, Schreiben und Löschen im 8.3-Namensraum.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">10</div>
+          <h3>Netzwerk-Stack (lwIP)</h3>
+          <p>Integrierter lwIP 2.1.3 TCP/IP-Stack mit Unterstützung für Intel e1000 und RTL8139 Treiber. Bietet DHCP, DNS und eine Socket-API für Userspace-Anwendungen wie <code>ping</code>.</p>
         </div>
       </div>
     </div>
@@ -195,7 +203,7 @@
   <section id="architecture" class="section section-dark">
     <div class="section-inner">
       <h2 class="section-title">Systemarchitektur</h2>
-      <p class="section-sub">Der gesamte Boot- und Initialisierungsablauf – von der Firmware bis zur laufenden Shell. Vollständig freestanding, keine libc-Abhängigkeit.</p>
+      <p class="section-sub">Vollständiger Boot- und Initialisierungsablauf – von der Systemfirmware bis zur betriebsbereiten Shell. Der Kernel ist vollständig freestanding implementiert und weist keinerlei Abhängigkeiten von einer C-Standardbibliothek auf.</p>
 
       <div class="arch-deep">
         <div class="arch-memory arch-card-wide">
@@ -271,7 +279,7 @@
   <section id="shell" class="section">
     <div class="section-inner">
       <h2 class="section-title">Shell & Kommandos</h2>
-      <p class="section-sub">Integrierter Kommando-Parser mit Builtins, registrierbaren Apps und VFS-Integration – von der Dateisystem-Introspektion bis zur Exception-Diagnose.</p>
+      <p class="section-sub">Integrierter Kommandozeileninterpreter mit Parser für Builtins und registrierbare Applikationen. Ermöglicht Dateisystem-Introspektion, Prozessverwaltung, Scheduling-Diagnose und Exception-Analyse über ein einheitliches Interface.</p>
       <div class="cmd-grid">
         <div class="cmd-col">
           <h3>Builtins</h3>
@@ -326,11 +334,11 @@
   <section id="filesystems" class="section section-dark">
     <div class="section-inner">
       <h2 class="section-title">Dateisysteme</h2>
-      <p class="section-sub">Zwei Implementierungen unter einem einheitlichen VFS-Layer mit Path-Resolver und offener Dateiverwaltung.</p>
+      <p class="section-sub">Zwei Dateisystemimplementierungen unter einem einheitlichen VFS-Layer mit Path-Resolver, Working-Directory und offener Dateiverwaltung.</p>
       <div class="fs-cards">
         <div class="fs-card">
           <h3>RAMFS <span class="fs-badge">In-Memory</span></h3>
-          <p>Das Root-Dateisystem liegt vollständig im Heap. touch, write, append, cat, cp, mv, rm – alle Operationen in O(n) über eine verkettete Liste.</p>
+          <p>In-Memory-Dateisystem, vollständig im Heap allokiert. Operiert mit einer einfach verketteten Liste (O(n) für die meisten Operationen). Unterstützt touch, write, append, cat, cp, mv und rm für schnelle Dateiexperimente ohne Blockdevice.</p>
           <pre class="fs-code"><span class="t-green">fs touch</span> test.txt
 <span class="t-green">fs write</span> test.txt "Hello RoninOS"
 <span class="t-green">fs cat</span> test.txt
@@ -400,6 +408,10 @@
               <span class="rm-status done"></span>
               <div><strong>UEFI-Boot</strong><span>GRUB-Standalone, USB-Images</span></div>
             </div>
+            <div class="roadmap-item done">
+              <span class="rm-status done"></span>
+              <div><strong>Netzwerk-Stack</strong><span>lwIP Integration, Intel e1000/RTL8139, DHCP & DNS</span></div>
+            </div>
           </div>
         </div>
 
@@ -412,7 +424,7 @@
             </div>
             <div class="roadmap-item current">
               <span class="rm-status current"></span>
-              <div><strong>Memory Safety</strong><span>Bounds-Checking, Heap-Validierung</span></div>
+              <div><strong>Ring-3 Isolation</strong><span>Userspace-Prozesse, Memory Protection (SMEP/SMAP)</span></div>
             </div>
             <div class="roadmap-item current">
               <span class="rm-status current"></span>
@@ -431,14 +443,6 @@
             <div class="roadmap-item future">
               <span class="rm-status future"></span>
               <div><strong>Secure Boot</strong><span>Signierte Kernel- und Update-Kette</span></div>
-            </div>
-            <div class="roadmap-item future">
-              <span class="rm-status future"></span>
-              <div><strong>Memory Isolation</strong><span>Ring-3 Userspace, SMEP/SMAP-Nutzung</span></div>
-            </div>
-            <div class="roadmap-item future">
-              <span class="rm-status future"></span>
-              <div><strong>Netzwerk-Stack</strong><span>Eigener TCP/IP mit integrierter Verschlüsselung</span></div>
             </div>
             <div class="roadmap-item future">
               <span class="rm-status future"></span>
