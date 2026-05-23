@@ -1425,6 +1425,7 @@ h1 {
   .arch-deep { grid-template-columns: 1fr; }
   .nav-inner { max-width: 100%; }
   .hero-stats { justify-content: center; }
+  .vision-grid { grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 768px) {
@@ -1437,6 +1438,7 @@ h1 {
   .hero-stats { gap: 1rem; }
   .stat-num { font-size: 1.5rem; }
 
+  .vision-grid { grid-template-columns: 1fr; }
   .features-grid { grid-template-columns: 1fr; }
   .arch-grid { grid-template-columns: 1fr; }
   .cmd-grid { grid-template-columns: 1fr; }
