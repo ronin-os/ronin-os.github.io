@@ -217,6 +217,18 @@ h1 {
   color: var(--text-muted);
   margin-top: 0.5rem;
 }
+.hero-codename {
+  display: inline-block;
+  margin-top: 0.5rem;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--purple);
+  background: rgba(198, 120, 221, 0.1);
+  border: 1px solid rgba(198, 120, 221, 0.25);
+  letter-spacing: 0.03em;
+}
 
 .hero-desc {
   font-size: 1.125rem;
@@ -1381,6 +1393,13 @@ h1 {
   width: 22px;
   height: 22px;
   filter: brightness(1.2);
+}
+.footer-codename {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--purple);
+  opacity: 0.8;
+  margin-left: -0.25rem;
 }
 .footer-desc {
   font-size: 0.875rem;
