@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RōninOS 🛡️ – Sicheres, unabhängiges Open-Source-Betriebssystem</title>
+  <title>RōninOS ⚔️ – Sicheres, unabhängiges Open-Source-Betriebssystem</title>
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="icon" type="image/svg+xml" href="assets/ronin-icon.svg">
 </head>
 <body>
+  <canvas id="particles" aria-hidden="true"></canvas>
+
   <nav class="navbar">
     <div class="nav-inner">
       <a href="#" class="nav-logo">
@@ -31,27 +33,29 @@
   <header class="hero">
     <div class="hero-bg">
       <div class="hero-grid"></div>
+      <div class="hero-glow"></div>
     </div>
     <div class="hero-content">
-      <div class="hero-badge">🔐 x86 · Freestanding · Open Source · Security</div>
+      <div class="hero-badge">⚔️ x86 · Freestanding · GUI · Networking · IPC · Open Source</div>
       <div class="hero-logo">
         <img src="assets/ronin-icon.svg" alt="RōninOS" class="hero-logo-img">
       </div>
       <h1>
         <span class="hero-title-main">RōninOS</span>
-        <span class="hero-title-sub">Auf dem Weg zu einem unabhängigen, sicheren Open-Source-Betriebssystem 🛡️</span>
+        <span class="hero-title-sub">Vom Kernel zur sicheren OS-Plattform – mit GUI, Netzwerk und Userspace</span>
       </h1>
       <p class="hero-desc">
-        RōninOS ist ein freestanding x86-Kernel, entwickelt als Grundstein für ein
-        vollständig unabhängiges, quelloffenes Betriebssystem. Das Projekt verfolgt
-        einen Security-by-Design-Ansatz: Speicherisolierung, Verschlüsselung und
-        transparente Auditierbarkeit werden nicht als optionale Erweiterungen,
-        sondern als architektonische Kernanforderungen behandelt. Die aktuelle
-        Codebasis umfasst Speicherverwaltung (PMM, Paging, Heap), präemptives
-        Scheduling, VFS mit RAMFS und FAT32 sowie einen modernen Netzwerk-Stack (lwIP) –
-        vollständig in C, kompilierbar via Docker-Cross-Toolchain oder nativem
-        x86_64-elf-GCC.
+        RōninOS ist ein freestanding x86-Kernel mit präemptivem Scheduling, vollwertigem TCP/IP-Stack (lwIP),
+        GUI-Compositor mit Fenstersystem, dynamischem ELF-Linker, IPC (Shared Memory, Semaphoren, Sockets),
+        Unix-ähnlichem Signal-Handling, PCI-Treiber-Modell, AHCI SATA und 20+ Userspace-Programmen –
+        vollständig in C, kompilierbar via Docker-Cross-Toolchain.
       </p>
+      <div class="hero-stats">
+        <div class="hero-stat"><span class="stat-num" data-target="30">0</span><span class="stat-label">+ Syscalls</span></div>
+        <div class="hero-stat"><span class="stat-num" data-target="20">0</span><span class="stat-label">Userspace-Apps</span></div>
+        <div class="hero-stat"><span class="stat-num" data-target="12">0</span><span class="stat-label">Dateisysteme</span></div>
+        <div class="hero-stat"><span class="stat-num" data-target="4">0</span><span class="stat-label">IPC-Mechanismen</span></div>
+      </div>
       <div class="hero-actions">
         <a href="https://github.com/MachuraHarry/RoninOS" class="btn-primary" target="_blank">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
@@ -70,9 +74,12 @@
             <span>GRUB loading /boot/roninos.elf</span>
             <span>multiboot2: framebuffer tag found</span>
             <span>pmm: memory map parsed</span>
-            <span>vfs: mounting ramfs at /</span>
-            <span>initrd: /initrd mounted read-only</span>
-            <span>scheduler: PIT preemption enabled</span>
+            <span>paging: 32-bit page tables enabled</span>
+            <span>vfs: mounting ramfs at /, procfs at /proc</span>
+            <span>pci: bus scan complete (e1000, RTL8139, AHCI)</span>
+            <span>lwIP: DHCP lease acquired</span>
+            <span>gui: compositor started @ 60 FPS</span>
+            <span>init: /initrd/sbin/init spawned</span>
             <span>shell: framebuffer console ready</span>
           </div>
           <div class="boot-progress"><span></span></div>
@@ -80,8 +87,8 @@
 
         <div class="desktop-content">
           <div class="desktop-topbar">
-            <span>RoninOS — framebuffer console @ 1920x1080</span>
-            <span>100Hz PIT · lwIP Stack · Intel e1000 / RTL8139</span>
+            <span>RoninOS — GUI Compositor @ 1920x1080 · 60 FPS</span>
+            <span>lwIP Stack · e1000 + RTL8139 · AHCI SATA</span>
           </div>
           <div class="desktop-body">
             <div class="window terminal-window" style="grid-column:1/-1">
@@ -89,23 +96,42 @@
                 <span>terminal — framebuffer console</span>
                 <div class="traffic" aria-hidden="true"><span></span><span></span><span></span></div>
               </div>
-              <pre class="terminal"><span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ ping google.com</span>
-<span class="terminal-line">PING google.com (142.250.185.78): 56 data bytes</span>
-<span class="terminal-line">64 bytes from 142.250.185.78: icmp_seq=0 ttl=118 time=14.2 ms</span>
-<span class="terminal-line">64 bytes from 142.250.185.78: icmp_seq=1 ttl=118 time=15.1 ms</span>
+              <pre class="terminal"><span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ neofetch</span>
+<span class="terminal-line">OS: RoninOS x86</span>
+<span class="terminal-line">Kernel: roninos.elf (freestanding)</span>
+<span class="terminal-line">Uptime: 42 minutes</span>
+<span class="terminal-line">Packages: 20 (userspace)</span>
+<span class="terminal-line">Shell: ronin-sh (tab-completion, history)</span>
+<span class="terminal-line">GUI: Compositor (60 FPS, Widgets)</span>
+<span class="terminal-line">Network: lwIP 2.1.3 (DHCP: 10.0.2.15)</span>
 
 <span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ bootinfo</span>
 <span class="terminal-line"><span class="ok">[OK]</span> Multiboot2 header verified (0xE85250D6)</span>
-<span class="terminal-line"><span class="ok">[OK]</span> lwIP 2.1.3 initialized (DHCP active)</span>
-<span class="terminal-line"><span class="ok">[OK]</span> VFS mounted at /</span>
-<span class="terminal-line"><span class="ok">[OK]</span> Initrd mounted at /initrd</span>
+<span class="terminal-line"><span class="ok">[OK]</span> lwIP 2.1.3 initialized (DHCP: 10.0.2.15)</span>
+<span class="terminal-line"><span class="ok">[OK]</span> VFS mounted at / (ramfs + procfs + devfs + tmpfs)</span>
+<span class="terminal-line"><span class="ok">[OK]</span> Initrd mounted at /initrd (TAR, 20 binaries)</span>
+
+<span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ ls /initrd/bin/</span>
+<span class="terminal-line">cat       clear     dyn_hello  exec_test  fork_test</span>
+<span class="terminal-line">gui_demo  hello     hexdump    ktest      layout_test</span>
+<span class="terminal-line">mmap_test nano      ping       pipe_test  segv_test</span>
+<span class="terminal-line">signal_test  test_app</span>
 
 <span class="terminal-line"><span class="prompt">ronin@kernel</span>:~$ help</span>
-<span class="terminal-line">about   bootinfo  cat   cd   clear   disk   echo   fat32</span>
-<span class="terminal-line">fs      heap_test help  ls   mem     meminfo ping   preempt</span>
-<span class="terminal-line">procmon ps        pwd   reboot  spawn  test_fault  uname</span>
-<span class="terminal-line">uptime  yield</span></pre>
+<span class="terminal-line">about   bootinfo  cat   cd   clear   config  cpuinfo  disk</span>
+<span class="terminal-line">echo    env       fat32 fs   grep    heap_test  help  less</span>
+<span class="terminal-line">ls      mem       meminfo  ping  preempt  procmon  ps</span>
+<span class="terminal-line">pwd     reboot    rm    run   set    spawn  startgui  test_fault</span>
+<span class="terminal-line">uname   uptime    wc    yield</span></pre>
             </div>
+          </div>
+          <div class="desktop-taskbar" aria-hidden="true">
+            <div class="taskbar-left">
+              <img src="assets/roninos-start-icon.png" alt="">
+              <span class="taskbar-item">terminal</span>
+              <span class="taskbar-item">compositor</span>
+            </div>
+            <span>42m uptime · 10.0.2.15</span>
           </div>
         </div>
       </div>
@@ -144,7 +170,7 @@
   <section id="features" class="section">
     <div class="section-inner">
       <h2 class="section-title">Kernkomponenten 🧱</h2>
-      <p class="section-sub">Neun modulare Subsysteme, die das technische Fundament des Kernels bilden – von der Speicherverwaltung bis zur Dateisystemabstraktion.</p>
+      <p class="section-sub">15 modulare Subsysteme, die das technische Fundament des Kernels bilden – von der Speicherverwaltung bis zum GUI-Compositor.</p>
       <div class="features-grid">
         <div class="feature-card">
           <div class="feature-icon">01</div>
@@ -159,42 +185,67 @@
         <div class="feature-card">
           <div class="feature-icon">03</div>
           <h3>Thread-Scheduler</h3>
-          <p>Kooperatives Round-Robin-Scheduling mit optionalem PIT-basiertem Preempting bei 100 Hz. Jeder Thread besitzt einen eigenen kmallozierten Stack sowie eine Zustandsmaschine (RUNNABLE, SLEEP, ZOMBIE). Introspektion über <code>ps</code> und <code>procmon</code>.</p>
+          <p>Präemptives Round-Robin-Scheduling via PIT IRQ0 (~10ms). TSS-basierter Ring-3-/Ring-0-Switch. Thread-Zustände: RUNNABLE, RUNNING, WAITING, ZOMBIE. Waitqueues für blockierende Synchronisation. Fork-Unterstützung.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">04</div>
           <h3>VFS & Dateisysteme</h3>
-          <p>Einheitliche Virtual-Filesystem-Schnittstelle mit Path-Resolver, Working-Directory und open/read/write-API. RAMFS als Root-Dateisystem (<code>/</code>), Multiboot2-Module read-only unter <code>/initrd</code>. FAT32-Implementierung auf generischem Blockdevice-Layer.</p>
+          <p>Einheitliche Virtual-Filesystem-Schnittstelle mit Path-Resolver, Working-Directory und open/read/write-API. 6 Dateisysteme: RAMFS, ProcFS, DevFS, TmpFS, Initrd, Pipes. FAT32 auf generischem Blockdevice-Layer.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">05</div>
-          <h3>Framebuffer-Konsole</h3>
-          <p>Dynamisch berechnetes Raster aus Bildschirmauflösung und Font-Zellgröße. ANSI-Farben in VS-Code-Dark-Palette, Standard-Font 8x16, optional 16x32. Diagnose-Overlay für Framebuffer-Parameter aktivierbar über <code>DEBUG=1</code>.</p>
+          <h3>GUI & Compositor</h3>
+          <p>Vollwertiges grafisches Fenstersystem mit Compositor, Window-Manager, Widgets (Button, Label, TextInput, Checkbox, Scrollbar) und Taskbar. GUI-Apps: Paint, Terminal, File Manager. Userspace-GUI via <code>libroninui</code>.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">06</div>
-          <h3>Shell & App-System</h3>
-          <p>Eigener Kommandozeilen-Parser mit Unterstützung für Builtins und registrierbare Applikationen. Die App-Registry in <code>apps.c</code> ermöglicht die Integration neuer Shell-Programme über die Funktion <code>app_&lt;name&gt;_main()</code> und einen Tabelleneintrag.</p>
+          <h3>Netzwerk-Stack (lwIP)</h3>
+          <p>Integrierter lwIP 2.1.3 TCP/IP-Stack mit Intel e1000 und RTL8139 Treibern. DHCP-Client, DNS-Resolver, Socket-API (Socket/Bind/Connect/Send/Recv/Listen/Accept). ICMP-Ping, UDP/TCP-Kommunikation.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">07</div>
-          <h3>Exception-Diagnose & Debugging</h3>
-          <p>Register-Dumps bei Kernel-Panics und User-Faults inklusive vollständiger CPU-Registeranzeige (EIP, CS, EFLAGS). Automatische Kernel/User-Mode-Erkennung über das CS-Segment. Manuelle Exception-Reproduktion via <code>test_fault &lt;gp|pf|ud&gt;</code>.</p>
+          <h3>ELF-Loader & User-Mode</h3>
+          <p>32-Bit-ELF-Loader für Ring-3-Prozesse. Unterstützt <code>ET_EXEC</code> (fixed) und <code>ET_DYN</code> (PIE). Separater Adressraum pro Prozess. User-Pointer-Validierung. 55+ Syscalls via INT 0x80.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">08</div>
-          <h3>UEFI & BIOS Boot</h3>
-          <p>Multiboot2-konformer ELF-Kernel-Header. Build-Targets für BIOS-ISO (GRUB-mkrescue), UEFI-Superfloppy-FAT32 sowie partitionierte MBR/FAT32-USB-Images. GRUB-Konfiguration mit mehrstufiger gfxmode-Fallbackkette und <code>videoinfo</code>-Debug-Eintrag.</p>
+          <h3>IPC & Signal-Handling</h3>
+          <p>Shared Memory (System V, 32 Segmente, bis zu 8 MB), Semaphoren (blockierende P/V via Waitqueues), Ronin Sockets (AF_RONIN, Unix-Domain-Sockets). Unix-ähnliche Signale: KILL, TERM, INT, SEGV, PIPE, CHLD.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">09</div>
-          <h3>Block-Devices & FAT32</h3>
-          <p>ATA-PIO-basierte Block-Device-Discovery über Primary/Secondary-Bus und Master/Slave-Kanäle. Generischer Blockdevice-Layer als Abstraktionsschnittstelle. Eigene FAT32-Implementierung mit Formatieren, Mounten, Lesen, Schreiben und Löschen im 8.3-Namensraum.</p>
+          <h3>PCI & Driver Model</h3>
+          <p>PCI-Bus-Enumeration (Bus 0-255, BAR-Probing). Driver Manager mit <code>driver_register()</code>/<code>driver_probe_all()</code>. Registrierte Treiber: Intel e1000, Realtek RTL8139, AHCI SATA. ATA PIO für Legacy-Geräte.</p>
         </div>
         <div class="feature-card">
           <div class="feature-icon">10</div>
-          <h3>Netzwerk-Stack (lwIP)</h3>
-          <p>Integrierter lwIP 2.1.3 TCP/IP-Stack mit Unterstützung für Intel e1000 und RTL8139 Treiber. Bietet DHCP, DNS und eine Socket-API für Userspace-Anwendungen wie <code>ping</code>.</p>
+          <h3>Dynamischer Linker</h3>
+          <p>Eigener ELF32-Dynamic-Linker <code>ld-ronin.so.1</code> mit PIE-Unterstützung. Shared Libraries (<code>libc.so.1</code>, <code>libtest.so</code>). Rekursives Laden von <code>DT_NEEDED</code>, REL/RELA-Relokationen, PLT/GOT.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">11</div>
+          <h3>Shell & App-System</h3>
+          <p>Eigener Kommandozeilen-Parser mit Tab-Vervollständigung, Shell-History, anpassbarem Prompt (<code>$PS1</code>), <code>env</code>/<code>set</code>-Builtins und Pipe-Syntax (<code>|</code>). 30+ Shell-Apps und Builtins.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">12</div>
+          <h3>Framebuffer & TTY</h3>
+          <p>Dynamisch berechnetes Raster aus Bildschirmauflösung und Font-Zellgröße. ANSI-Farben in VS-Code-Dark-Palette. TTY-Layer mit Raw/Cooked-Modus, Escape-Sequenz-Konvertierung und Blocking-Read via Waitqueues.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">13</div>
+          <h3>Input & Devices</h3>
+          <p>Generisches Input-Event-System für Tastatur (PS/2, layout-konfigurierbar) und Maus (PS/2, 3 Tasten). <code>/dev/input</code> für Userspace. DevFS: <code>/dev/console</code>, <code>/dev/serial</code>, <code>/dev/fb0</code>, <code>/dev/null</code>.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">14</div>
+          <h3>Config & Boot</h3>
+          <p>Persistente Key-Value-Konfiguration (<code>/etc/roninos.conf</code>). Boot-Commandline-Parser (<code>nopreempt</code>, <code>debug</code>, <code>init=</code>). BIOS/UEFI-Dual-Boot mit GRUB. Docker-Cross-Toolchain, CI via GitHub Actions.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">15</div>
+          <h3>Userspace-Ökosystem</h3>
+          <p>Userspace-libc (<code>printf</code>, <code>malloc</code>, <code>str*</code>), Init-Prozess, Compositor. 20+ Programme: <code>cat</code>, <code>nano</code>, <code>ping</code>, <code>gui_demo</code>, <code>fork_test</code>, <code>signal_test</code>, <code>mmap_test</code> uvm.</p>
         </div>
       </div>
     </div>
@@ -203,10 +254,10 @@
   <section id="architecture" class="section section-dark">
     <div class="section-inner">
       <h2 class="section-title">Systemarchitektur</h2>
-      <p class="section-sub">Vollständiger Boot- und Initialisierungsablauf – von der Systemfirmware bis zur betriebsbereiten Shell. Der Kernel ist vollständig freestanding implementiert und weist keinerlei Abhängigkeiten von einer C-Standardbibliothek auf.</p>
+      <p class="section-sub">Vollständiger Boot- und Initialisierungsablauf – von der Systemfirmware bis zur betriebsbereiten GUI-Oberfläche. Der Kernel ist vollständig freestanding implementiert und weist keinerlei Abhängigkeiten von einer C-Standardbibliothek auf.</p>
 
       <div class="arch-deep">
-        <div class="arch-memory arch-card-wide">
+        <div class="arch-card-wide">
           <h3>Speicherhierarchie</h3>
           <div class="mem-layers">
             <div class="mem-layer">
@@ -216,61 +267,176 @@
             <div class="mem-arrow">↓</div>
             <div class="mem-layer">
               <span class="mem-name">Paging</span>
-              <span class="mem-desc">32-Bit Page Tables · Identity Mapping</span>
+              <span class="mem-desc">32-Bit Page Tables · Identity Mapping · Address Spaces</span>
             </div>
             <div class="mem-arrow">↓</div>
             <div class="mem-layer">
               <span class="mem-name">Heap</span>
-              <span class="mem-desc">First-Fit · kmalloc/kfree · Spinlock</span>
+              <span class="mem-desc">First-Fit · kmalloc/kfree · Spinlock · MMAP (SYS_MMAP)</span>
             </div>
           </div>
         </div>
 
-        <div class="arch-boot arch-card-wide">
+        <div class="arch-card-wide">
           <h3>Boot-Sequenz</h3>
           <div class="flow">
             <div class="flow-step">BIOS / UEFI</div>
             <div class="flow-arrow">↓</div>
             <div class="flow-step">GRUB (Multiboot2)</div>
             <div class="flow-arrow">↓</div>
-            <div class="flow-step">pmm_init()</div>
+            <div class="flow-step">boot.s → kmain()</div>
             <div class="flow-arrow">↓</div>
-            <div class="flow-step">paging_init()</div>
+            <div class="flow-step">PMM · Paging · Heap</div>
             <div class="flow-arrow">↓</div>
-            <div class="flow-step">heap_init()</div>
+            <div class="flow-step">VFS · RAMFS · ProcFS · DevFS · TmpFS</div>
             <div class="flow-arrow">↓</div>
-            <div class="flow-step">GDT / IDT / ISR</div>
+            <div class="flow-step">PCI Scan · Driver Probe</div>
             <div class="flow-arrow">↓</div>
-            <div class="flow-step">sched_init()</div>
+            <div class="flow-step">GDT/IDT/ISR · Scheduler · Syscalls</div>
             <div class="flow-arrow">↓</div>
-            <div class="flow-step">VFS · Shell · Framebuffer</div>
+            <div class="flow-step">lwIP · DHCP · Socket-API</div>
+            <div class="flow-arrow">↓</div>
+            <div class="flow-step">GUI Compositor · Shell · Init</div>
           </div>
         </div>
       </div>
 
-      <div class="arch-grid" style="margin-top:1rem">
-        <div class="arch-card">
-          <h3>kernel/</h3>
-          <ul>
-            <li><span class="t-blue">apps/</span> – Shell-Apps (fs, fat32, scheduler tools)</li>
-            <li><span class="t-blue">fs/</span> – RAMFS, FAT32, VFS-Layer</li>
-            <li><span class="t-blue">lib/</span> – Freestanding-Hilfsbibliothek</li>
-            <li><span class="t-blue">mem/</span> – PMM, Paging, Heap</li>
-            <li><span class="t-blue">sched/</span> – Threads, Scheduler</li>
-            <li><span class="t-blue">shell/</span> – Parser, Builtins</li>
-            <li><span class="t-blue">terminal/</span> – VGA + Framebuffer-Konsole</li>
-          </ul>
+      <div class="arch-tabs">
+        <div class="arch-tab active" data-arch="kernel">kernel/</div>
+        <div class="arch-tab" data-arch="userspace">userspace/</div>
+        <div class="arch-tab" data-arch="infra">Infrastruktur</div>
+      </div>
+
+      <div class="arch-panel active" id="arch-kernel">
+        <div class="arch-grid">
+          <div class="arch-card">
+            <h3>Kernel Core</h3>
+            <ul>
+              <li><span class="t-blue">kernel.c</span> – kmain() Einstieg</li>
+              <li><span class="t-blue">boot.s</span> – Multiboot2-Header</li>
+              <li><span class="t-blue">mem/</span> – PMM, Paging, Heap</li>
+              <li><span class="t-blue">sched/</span> – Threads, Scheduler, Fork</li>
+              <li><span class="t-blue">fs/</span> – VFS, RAMFS, FAT32, ProcFS, DevFS, TmpFS, Pipe</li>
+              <li><span class="t-blue">shell/</span> – Parser, Builtins, Apps</li>
+            </ul>
+          </div>
+          <div class="arch-card">
+            <h3>Driver & Hardware</h3>
+            <ul>
+              <li><span class="t-blue">drivers/</span> – PCI, ATA PIO, AHCI, e1000, RTL8139</li>
+              <li><span class="t-blue">block/</span> – Block-Device-Layer</li>
+              <li><span class="t-blue">terminal/</span> – VGA + Framebuffer-Konsole</li>
+              <li><span class="t-blue">input/</span> – Keyboard, Mouse, Layout</li>
+              <li><span class="t-blue">tty/</span> – TTY-Layer (Raw/Cooked)</li>
+              <li><span class="t-blue">net/</span> – lwIP, NIC-Abstraktion, Sockets</li>
+            </ul>
+          </div>
+          <div class="arch-card">
+            <h3>IPC & Userspace</h3>
+            <ul>
+              <li><span class="t-blue">ipc/</span> – SHM, Semaphoren, Ronin Sockets</li>
+              <li><span class="t-blue">loader/</span> – ELF-Loader (ET_EXEC, ET_DYN)</li>
+              <li><span class="t-blue">signal.c</span> – Signal-Handling</li>
+              <li><span class="t-blue">syscall.c</span> – Dispatcher (55+ Syscalls)</li>
+              <li><span class="t-blue">config/</span> – Persistente Konfiguration</li>
+              <li><span class="t-blue">tests/</span> – Kernel-Tests</li>
+            </ul>
+          </div>
+          <div class="arch-card">
+            <h3>GUI & UI</h3>
+            <ul>
+              <li><span class="t-blue">ui/compositor.c</span> – Compositor (60 FPS)</li>
+              <li><span class="t-blue">ui/wm.c</span> – Window Manager</li>
+              <li><span class="t-blue">ui/widget/</span> – Button, Label, TextInput, Checkbox</li>
+              <li><span class="t-blue">ui/taskbar.c</span> – Taskbar</li>
+              <li><span class="t-blue">ui/gfx.c</span> – Grafik-Kontext (Pixel, Line, Rect)</li>
+              <li><span class="t-blue">apps/</span> – Paint, Terminal, File Manager, Demo</li>
+            </ul>
+          </div>
         </div>
-        <div class="arch-card">
-          <h3>Infrastruktur</h3>
-          <ul>
-            <li><span class="t-blue">boot/uefi/</span> – UEFI-Loader</li>
-            <li><span class="t-blue">iso/</span> – GRUB-Konfiguration, Initrd</li>
-            <li><span class="t-blue">tools/</span> – QEMU-/Image-Skripte</li>
-            <li><span class="t-blue">buildenv/</span> – Docker-Toolchain</li>
-            <li><span class="t-blue">.github/</span> – CI-Pipeline</li>
-            <li><span class="t-blue">docs/</span> – boot, memory, scheduler</li>
-          </ul>
+      </div>
+
+      <div class="arch-panel" id="arch-userspace">
+        <div class="arch-grid">
+          <div class="arch-card">
+            <h3>Userspace libc</h3>
+            <ul>
+              <li><span class="t-blue">stdio</span> – printf, sprintf, puts, gets</li>
+              <li><span class="t-blue">stdlib</span> – malloc, free, calloc, atoi</li>
+              <li><span class="t-blue">string</span> – strlen, strcpy, strcmp, memcpy</li>
+              <li><span class="t-blue">syscall</span> – Wrapper für 55+ Syscalls</li>
+              <li><span class="t-blue">crt0.S</span> – _start Einstiegspunkt</li>
+            </ul>
+          </div>
+          <div class="arch-card">
+            <h3>System-Programme</h3>
+            <ul>
+              <li><span class="t-blue">init</span> – Erster Userspace-Prozess</li>
+              <li><span class="t-blue">compositor</span> – Userspace-GUI-Compositor</li>
+              <li><span class="t-blue">nano</span> – HTTP-Server/Client</li>
+              <li><span class="t-blue">ping</span> – ICMP-Ping</li>
+              <li><span class="t-blue">gui_demo</span> – GUI-Demo mit libroninui</li>
+            </ul>
+          </div>
+          <div class="arch-card">
+            <h3>Dynamic Linking</h3>
+            <ul>
+              <li><span class="t-blue">ld-ronin.so.1</span> – ELF32-Dynamic-Linker</li>
+              <li><span class="t-blue">libc.so.1</span> – Shared C Library</li>
+              <li><span class="t-blue">libroninui</span> – GUI-Toolkit (IPC, Widgets)</li>
+              <li><span class="t-blue">libtest.so</span> – Testbibliothek</li>
+            </ul>
+          </div>
+          <div class="arch-card">
+            <h3>Userspace-Programme</h3>
+            <ul>
+              <li><span class="t-blue">/bin/</span> – cat, clear, hello, hexdump</li>
+              <li><span class="t-blue">/bin/</span> – fork_test, exec_test, pipe_test</li>
+              <li><span class="t-blue">/bin/</span> – signal_test, segv_test, mmap_test</li>
+              <li><span class="t-blue">/bin/</span> – dyn_hello, test_app (dynlink)</li>
+              <li><span class="t-blue">/bin/</span> – gui_demo, gui_showcase, layout_test</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="arch-panel" id="arch-infra">
+        <div class="arch-grid">
+          <div class="arch-card">
+            <h3>Build & Toolchain</h3>
+            <ul>
+              <li><span class="t-blue">buildenv/</span> – Docker-Cross-Toolchain</li>
+              <li><span class="t-blue">Makefile</span> – BIOS/UEFI-Build, Image-Erstellung</li>
+              <li><span class="t-blue">scripts/</span> – build.sh, QEMU-Helfer</li>
+              <li><span class="t-blue">tools/</span> – Image-Tools, QEMU-Launcher</li>
+            </ul>
+          </div>
+          <div class="arch-card">
+            <h3>Boot & Deployment</h3>
+            <ul>
+              <li><span class="t-blue">boot/uefi/</span> – UEFI-Buildregeln</li>
+              <li><span class="t-blue">iso/</span> – GRUB-Config, Initrd (TAR)</li>
+              <li><span class="t-blue">iso/initrd/</span> – Binaries, Libs, Resources</li>
+              <li><span class="t-blue">.github/</span> – CI-Pipeline (Docker + QEMU)</li>
+            </ul>
+          </div>
+          <div class="arch-card">
+            <h3>Dokumentation</h3>
+            <ul>
+              <li><span class="t-blue">docs/</span> – Interne Architektur-Doku</li>
+              <li><span class="t-blue">Wiki/</span> – Vollständige Projektdoku</li>
+              <li><span class="t-blue">README.md</span> – Projekt-Übersicht</li>
+            </ul>
+          </div>
+          <div class="arch-card">
+            <h3>Testing</h3>
+            <ul>
+              <li><span class="t-blue">tests/</span> – Kernel-Selbsttests beim Boot</li>
+              <li><span class="t-blue">userspace/</span> – fork_test, pipe_test, signal_test</li>
+              <li><span class="t-blue">CI</span> – QEMU-Smoke-Tests in GitHub Actions</li>
+              <li><span class="t-blue">serial</span> – Diagnose via COM1</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -279,7 +445,7 @@
   <section id="shell" class="section">
     <div class="section-inner">
       <h2 class="section-title">Shell & Kommandos</h2>
-      <p class="section-sub">Integrierter Kommandozeileninterpreter mit Parser für Builtins und registrierbare Applikationen. Ermöglicht Dateisystem-Introspektion, Prozessverwaltung, Scheduling-Diagnose und Exception-Analyse über ein einheitliches Interface.</p>
+      <p class="section-sub">Integrierter Kommandozeileninterpreter mit Parser, Tab-Vervollständigung, Shell-History, anpassbarem Prompt und Pipe-Unterstützung. 30+ Builtins und registrierbare Applikationen.</p>
       <div class="cmd-grid">
         <div class="cmd-col">
           <h3>Builtins</h3>
@@ -287,10 +453,11 @@
             <div class="cmd-item"><code>help</code><span>Alle verfügbaren Befehle</span></div>
             <div class="cmd-item"><code>clear</code><span>Terminal leeren</span></div>
             <div class="cmd-item"><code>echo &lt;text&gt;</code><span>Text ausgeben</span></div>
+            <div class="cmd-item"><code>env</code><span>Umgebungsvariablen anzeigen</span></div>
+            <div class="cmd-item"><code>set &lt;key=val&gt;</code><span>Variable setzen</span></div>
             <div class="cmd-item"><code>uname</code><span>Kernel-Identität</span></div>
             <div class="cmd-item"><code>uptime</code><span>Systemlaufzeit</span></div>
             <div class="cmd-item"><code>reboot</code><span>CPU-Reset via Keyboard-Controller</span></div>
-            <div class="cmd-item"><code>mem</code><span>Alias für meminfo</span></div>
           </div>
         </div>
         <div class="cmd-col">
@@ -300,18 +467,10 @@
             <div class="cmd-item"><code>bootinfo</code><span>Multiboot2-/Bootloader-Diagnose</span></div>
             <div class="cmd-item"><code>meminfo</code><span>Heap-/PMM-Statistiken</span></div>
             <div class="cmd-item"><code>heap_test</code><span>Allokator-Selbsttest</span></div>
+            <div class="cmd-item"><code>cpuinfo</code><span>CPU-Informationen</span></div>
+            <div class="cmd-item"><code>config</code><span>Konfiguration anzeigen/setzen</span></div>
             <div class="cmd-item"><code>ps</code><span>Thread-Tabelle</span></div>
-            <div class="cmd-item"><code>procmon</code><span>Prozess-Snapshot</span></div>
-            <div class="cmd-item"><code>spawn &lt;n&gt;</code><span>Worker-Threads erzeugen</span></div>
-          </div>
-        </div>
-        <div class="cmd-col">
-          <h3>Scheduler & Debug</h3>
-          <div class="cmd-list">
-            <div class="cmd-item"><code>yield</code><span>Freiwilliger Thread-Wechsel</span></div>
-            <div class="cmd-item"><code>preempt on|off</code><span>Preemption umschalten</span></div>
-            <div class="cmd-item"><code>test_fault &lt;gp|pf|ud&gt;</code><span>Exception-Test für Register-Dump</span></div>
-            <div class="cmd-item"><code>bootinfo</code><span>Framebuffer-/Memory-Map-Diagnose</span></div>
+            <div class="cmd-item"><code>procmon</code><span>Detaillierte Prozessliste</span></div>
           </div>
         </div>
         <div class="cmd-col">
@@ -319,13 +478,44 @@
           <div class="cmd-list">
             <div class="cmd-item"><code>ls [path]</code><span>VFS-Verzeichnis listing</span></div>
             <div class="cmd-item"><code>cat &lt;path&gt;</code><span>Datei anzeigen</span></div>
+            <div class="cmd-item"><code>rm &lt;path&gt;</code><span>Datei löschen</span></div>
             <div class="cmd-item"><code>pwd</code><span>VFS-Arbeitsverzeichnis</span></div>
             <div class="cmd-item"><code>cd [path]</code><span>cwd wechseln</span></div>
             <div class="cmd-item"><code>fs &lt;cmd&gt;</code><span>RAMFS-Operationen</span></div>
             <div class="cmd-item"><code>fat32 &lt;cmd&gt;</code><span>FAT32 auf Blockdevice</span></div>
             <div class="cmd-item"><code>disk</code><span>ATA-Blockdevices anzeigen</span></div>
-            <div class="cmd-item"><code>disk info|read</code><span>Blockdevice-Details/Lesen</span></div>
           </div>
+        </div>
+        <div class="cmd-col">
+          <h3>Scheduler & Debug</h3>
+          <div class="cmd-list">
+            <div class="cmd-item"><code>yield</code><span>Freiwilliger Thread-Wechsel</span></div>
+            <div class="cmd-item"><code>preempt on|off</code><span>Preemption umschalten</span></div>
+            <div class="cmd-item"><code>spawn &lt;n&gt;</code><span>Worker-Threads erzeugen</span></div>
+            <div class="cmd-item"><code>run &lt;path&gt;</code><span>Userspace-Programm starten</span></div>
+            <div class="cmd-item"><code>test_fault &lt;gp|pf|ud&gt;</code><span>Exception-Test</span></div>
+            <div class="cmd-item"><code>grep &lt;pattern&gt;</code><span>Textsuche</span></div>
+            <div class="cmd-item"><code>less &lt;file&gt;</code><span>Datei seitenweise</span></div>
+            <div class="cmd-item"><code>wc &lt;file&gt;</code><span>Zeichen/Wörter zählen</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="shell-features">
+        <div class="shell-feature">
+          <span class="shell-feature-icon">⇥</span>
+          <span>Tab-Vervollständigung für Pfade und Befehle</span>
+        </div>
+        <div class="shell-feature">
+          <span class="shell-feature-icon">↕</span>
+          <span>Shell-History speichern/laden</span>
+        </div>
+        <div class="shell-feature">
+          <span class="shell-feature-icon">$PS1</span>
+          <span>Anpassbarer Prompt (\w, \u, \h)</span>
+        </div>
+        <div class="shell-feature">
+          <span class="shell-feature-icon">\|</span>
+          <span>Pipe-Syntax für Prozessverkettung</span>
         </div>
       </div>
     </div>
@@ -334,11 +524,11 @@
   <section id="filesystems" class="section section-dark">
     <div class="section-inner">
       <h2 class="section-title">Dateisysteme</h2>
-      <p class="section-sub">Zwei Dateisystemimplementierungen unter einem einheitlichen VFS-Layer mit Path-Resolver, Working-Directory und offener Dateiverwaltung.</p>
+      <p class="section-sub">Sechs Dateisystemimplementierungen unter einem einheitlichen VFS-Layer mit Path-Resolver, Working-Directory, offener Dateiverwaltung und 30+ VFS-Operationen.</p>
       <div class="fs-cards">
         <div class="fs-card">
-          <h3>RAMFS <span class="fs-badge">In-Memory</span></h3>
-          <p>In-Memory-Dateisystem, vollständig im Heap allokiert. Operiert mit einer einfach verketteten Liste (O(n) für die meisten Operationen). Unterstützt touch, write, append, cat, cp, mv und rm für schnelle Dateiexperimente ohne Blockdevice.</p>
+          <h3>RAMFS <span class="fs-badge">Root</span></h3>
+          <p>In-Memory-Dateisystem als Root (<code>/</code>). 96 Nodes, 24 Zeichen Name, 512 Bytes Content. Operationen: touch, write, append, cat, cp, mv, rm.</p>
           <pre class="fs-code"><span class="t-green">fs touch</span> test.txt
 <span class="t-green">fs write</span> test.txt "Hello RoninOS"
 <span class="t-green">fs cat</span> test.txt
@@ -346,18 +536,39 @@
         </div>
         <div class="fs-card">
           <h3>FAT32 <span class="fs-badge">Block Device</span></h3>
-          <p>Eigene FAT32-Implementierung auf dem generischen Blockdevice-Layer (ATA PIO). Bootsektor, FSInfo, FAT und Root-Cluster werden bei format angelegt. 8.3-Dateinamen, Einzel-Cluster-Dateien (512 B).</p>
+          <p>Eigene FAT32-Implementierung auf ATA PIO / AHCI SATA. Bootsektor, FSInfo, FAT und Root-Cluster. 8.3-Dateinamen, Format/Mount/Write/Read/Delete.</p>
           <pre class="fs-code"><span class="t-green">fat32 format</span> hd0 --yes
 <span class="t-green">fat32 write</span> NOTE.TXT "Hallo"
 <span class="t-green">fat32 cat</span> NOTE.TXT
 <span class="t-green">fat32 rm</span> NOTE.TXT</pre>
         </div>
         <div class="fs-card">
-          <h3>VFS + Initrd <span class="fs-badge">Virtuell</span></h3>
-          <p>Einheitliche open/read/write/readdir-Schnittstelle. RAMFS als Root (<code>/</code>), Multiboot2-Module read-only unter <code>/initrd</code>. cwd pro Shell-Prozess.</p>
-          <pre class="fs-code"><span class="t-green">ls</span> /
-<span class="t-green">cd</span> /initrd
-<span class="t-green">cat</span> /initrd/banner.txt</pre>
+          <h3>ProcFS <span class="fs-badge">Virtuell</span></h3>
+          <p>Virtuelles Dateisystem unter <code>/proc</code> mit cpuinfo, meminfo, uptime und per-PID-Verzeichnissen. Ermöglicht Introspektion des Kernel-Zustands zur Laufzeit.</p>
+          <pre class="fs-code"><span class="t-green">cat</span> /proc/cpuinfo
+<span class="t-green">cat</span> /proc/meminfo
+<span class="t-green">ls</span> /proc/1/</pre>
+        </div>
+        <div class="fs-card">
+          <h3>DevFS <span class="fs-badge">Virtuell</span></h3>
+          <p>Virtuelles <code>/dev</code> mit Gerätedateien für den Systemzugriff. Bereitgestellt: console, serial, fb0 (mmap-fähig), null, ram0, input.</p>
+          <pre class="fs-code"><span class="t-green">ls</span> /dev/
+<span class="t-green">cat</span> /dev/serial
+<span class="t-green">ioctl</span> /dev/fb0</pre>
+        </div>
+        <div class="fs-card">
+          <h3>TmpFS <span class="fs-badge">Temporär</span></h3>
+          <p>Temporäres Dateisystem unter <code>/tmp</code> und <code>/dev/shm</code>. Shared Memory im Userspace. Ideal für flüchtige Daten und Interprozess-Kommunikation.</p>
+          <pre class="fs-code"><span class="t-green">echo</span> "test" > /tmp/data
+<span class="t-green">cat</span> /tmp/data
+<span class="t-green">ls</span> /dev/shm/</pre>
+        </div>
+        <div class="fs-card">
+          <h3>Pipes <span class="fs-badge">IPC</span></h3>
+          <p>Kernel-gebufferte unidirektionale Datenströme. Blockierende Read/Write-Operationen via Waitqueues. Grundlage für Shell-Pipes (<code>|</code>) und Interprozess-Kommunikation.</p>
+          <pre class="fs-code"><span class="t-green">pipe</span> /tmp/mypipe
+<span class="t-green">echo</span> "hello" > /tmp/mypipe
+<span class="t-green">cat</span> /tmp/mypipe</pre>
         </div>
       </div>
     </div>
@@ -366,88 +577,103 @@
   <section id="roadmap" class="section">
     <div class="section-inner">
       <h2 class="section-title">Roadmap 🗺️</h2>
-      <p class="section-sub">Vom Kernel zur sicheren OS-Plattform – unsere Meilensteine auf dem Weg zu einem unabhängigen, verschlüsselten Betriebssystem.</p>
+      <p class="section-sub">Vom Kernel zur sicheren OS-Plattform – 10 Phasen Meilensteine auf dem Weg zu einem unabhängigen, verschlüsselten Betriebssystem.</p>
 
-      <div class="roadmap">
-        <div class="roadmap-col">
-          <h3 class="roadmap-heading done">✓ Erreicht</h3>
-          <div class="roadmap-items">
-            <div class="roadmap-item done">
-              <span class="rm-status done"></span>
-              <div><strong>Boot & Build</strong><span>BIOS/UEFI, Multiboot2, Docker-Build, CI</span></div>
-            </div>
-            <div class="roadmap-item done">
-              <span class="rm-status done"></span>
-              <div><strong>Speicherverwaltung</strong><span>PMM, 32-Bit-Paging, Heap First-Fit</span></div>
-            </div>
-            <div class="roadmap-item done">
-              <span class="rm-status done"></span>
-              <div><strong>VFS + RAMFS + Initrd</strong><span>Einheitliche API, Root-RAMFS, Initrd-Mount</span></div>
-            </div>
-            <div class="roadmap-item done">
-              <span class="rm-status done"></span>
-              <div><strong>FAT32</strong><span>Read/Write/Delete auf ATA-Blockdevices</span></div>
-            </div>
-            <div class="roadmap-item done">
-              <span class="rm-status done"></span>
-              <div><strong>Framebuffer-Konsole</strong><span>ANSI-Farben, 8x16/16x32-Fonts</span></div>
-            </div>
-            <div class="roadmap-item done">
-              <span class="rm-status done"></span>
-              <div><strong>Scheduler + Threads</strong><span>Preemptives Round-Robin, Kernel-Threads</span></div>
-            </div>
-            <div class="roadmap-item done">
-              <span class="rm-status done"></span>
-              <div><strong>Shell & App-System</strong><span>Kommando-Parser, Builtins, Apps</span></div>
-            </div>
-            <div class="roadmap-item done">
-              <span class="rm-status done"></span>
-              <div><strong>Exception-Diagnose</strong><span>Register-Dumps, test_fault</span></div>
-            </div>
-            <div class="roadmap-item done">
-              <span class="rm-status done"></span>
-              <div><strong>UEFI-Boot</strong><span>GRUB-Standalone, USB-Images</span></div>
-            </div>
-            <div class="roadmap-item done">
-              <span class="rm-status done"></span>
-              <div><strong>Netzwerk-Stack</strong><span>lwIP Integration, Intel e1000/RTL8139, DHCP & DNS</span></div>
-            </div>
+      <div class="roadmap-timeline">
+        <div class="tl-phase done">
+          <div class="tl-marker done"></div>
+          <div class="tl-content">
+            <span class="tl-tag done">Phase 0–2 ✓</span>
+            <h3>Preemptive Scheduling · Ring-3 · Syscalls</h3>
+            <p>Präemptives Round-Robin via PIT IRQ0, TSS, Ring-3 User-Mode, 55+ Syscalls via INT 0x80</p>
           </div>
         </div>
-
-        <div class="roadmap-col">
-          <h3 class="roadmap-heading current">⚙ In Arbeit</h3>
-          <div class="roadmap-items">
-            <div class="roadmap-item current">
-              <span class="rm-status current"></span>
-              <div><strong>Erweiterte FAT32</strong><span>Unterverzeichnisse, Multi-Cluster-Dateien</span></div>
-            </div>
-            <div class="roadmap-item current">
-              <span class="rm-status current"></span>
-              <div><strong>Ring-3 Isolation</strong><span>Userspace-Prozesse, Memory Protection (SMEP/SMAP)</span></div>
-            </div>
-            <div class="roadmap-item current">
-              <span class="rm-status current"></span>
-              <div><strong>Partition Tables</strong><span>MBR/GPT-Parsing</span></div>
-            </div>
+        <div class="tl-phase done">
+          <div class="tl-marker done"></div>
+          <div class="tl-content">
+            <span class="tl-tag done">Phase 5 ✓</span>
+            <h3>Process Model</h3>
+            <p>Fork, Exec, Waitpid, Pipe-Syscalls, Shell Pipe-Syntax vorbereitet</p>
           </div>
         </div>
-
-        <div class="roadmap-col">
-          <h3 class="roadmap-heading future">🔐 Security & Encryption</h3>
-          <div class="roadmap-items">
-            <div class="roadmap-item future">
-              <span class="rm-status future"></span>
-              <div><strong>Verschlüsseltes Dateisystem</strong><span>LUKS-ähnliche Encryption auf Blockdevice-Ebene</span></div>
-            </div>
-            <div class="roadmap-item future">
-              <span class="rm-status future"></span>
-              <div><strong>Secure Boot</strong><span>Signierte Kernel- und Update-Kette</span></div>
-            </div>
-            <div class="roadmap-item future">
-              <span class="rm-status future"></span>
-              <div><strong>Audit & Transparency</strong><span>Reproduzierbare Builds, öffentliche Audits</span></div>
-            </div>
+        <div class="tl-phase done">
+          <div class="tl-marker done"></div>
+          <div class="tl-content">
+            <span class="tl-tag done">Phase 6 ✓</span>
+            <h3>PCI & Storage Stack</h3>
+            <p>PCI-Bus-Enumeration, Driver Model, AHCI SATA-Treiber, ATA PIO</p>
+          </div>
+        </div>
+        <div class="tl-phase done">
+          <div class="tl-marker done"></div>
+          <div class="tl-content">
+            <span class="tl-tag done">Phase 7 ✓</span>
+            <h3>Networking</h3>
+            <p>lwIP TCP/IP-Stack (ARP, IP, ICMP, UDP, TCP, DHCP), e1000 + RTL8139, Socket-API</p>
+          </div>
+        </div>
+        <div class="tl-phase done">
+          <div class="tl-marker done"></div>
+          <div class="tl-content">
+            <span class="tl-tag done">Phase 8 ✓</span>
+            <h3>Signal Handling & IPC</h3>
+            <p>6 Unix-Signale, Shared Memory (SHM), Semaphoren (SEM), Ronin Sockets (AF_RONIN)</p>
+          </div>
+        </div>
+        <div class="tl-phase done">
+          <div class="tl-marker done"></div>
+          <div class="tl-content">
+            <span class="tl-tag done">Phase 9 ✓</span>
+            <h3>User-Space Drivers & VFS</h3>
+            <p>DevFS, ProcFS, TmpFS, ioctl-Syscall, mmap-fähiges /dev/fb0, 6 Dateisysteme</p>
+          </div>
+        </div>
+        <div class="tl-phase done">
+          <div class="tl-marker done"></div>
+          <div class="tl-content">
+            <span class="tl-tag done">Phase 11 ✓</span>
+            <h3>Dynamic Linking & Shared Libraries</h3>
+            <p>ld-ronin.so.1, libc.so.1, PIE-Unterstützung, REL/RELA-Relokationen, PLT/GOT</p>
+          </div>
+        </div>
+        <div class="tl-phase current">
+          <div class="tl-marker current"></div>
+          <div class="tl-content">
+            <span class="tl-tag current">Phase 3–4</span>
+            <h3>FAT32 Enhancements & Demand Paging</h3>
+            <p>Multi-Cluster-Dateien, Subdirectories, VFAT LFN · Page Fault → Demand-Allokation, COW, Swap</p>
+          </div>
+        </div>
+        <div class="tl-phase current">
+          <div class="tl-marker current"></div>
+          <div class="tl-content">
+            <span class="tl-tag current">GUI</span>
+            <h3>GUI Compositor & Window Manager</h3>
+            <p>Compositor (60 FPS), Widget-System, Userspace-Compositor, Theme-Engine, Animationen</p>
+          </div>
+        </div>
+        <div class="tl-phase future">
+          <div class="tl-marker future"></div>
+          <div class="tl-content">
+            <span class="tl-tag future">Phase 10</span>
+            <h3>x86-64 Long Mode</h3>
+            <p>64-bit Kernel, PML4 Page Tables, >4 GB RAM, 64-bit ELF-Loader, 32-bit Kompatibilität</p>
+          </div>
+        </div>
+        <div class="tl-phase future">
+          <div class="tl-marker future"></div>
+          <div class="tl-content">
+            <span class="tl-tag future">Security</span>
+            <h3>Sicherheitserweiterungen</h3>
+            <p>ASLR, NX-Bit, verschlüsseltes Dateisystem (LUKS-ähnlich), Secure Boot, reproduzierbare Builds</p>
+          </div>
+        </div>
+        <div class="tl-phase future">
+          <div class="tl-marker future"></div>
+          <div class="tl-content">
+            <span class="tl-tag future">Erweiterungen</span>
+            <h3>SMP · Audio · USB · POSIX</h3>
+            <p>Multi-Core-Support, Audio-Stack, USB-Stack, POSIX-Compliance, ARM/RISC-V-Port</p>
           </div>
         </div>
       </div>
@@ -543,11 +769,12 @@ sudo usermod -aG docker "$USER"
           <img src="assets/ronin-icon.svg" alt="RōninOS" class="footer-logo-img">
           <span>RōninOS</span>
         </div>
-        <p class="footer-desc">RōninOS 🛡️ – auf dem Weg zu einem unabhängigen, sicheren Open-Source-Betriebssystem. Freestanding x86-Kernel, Community-getrieben, Verschlüsselung als Fundament. Vollständig von Grund auf in C entwickelt.</p>
+        <p class="footer-desc">RōninOS ⚔️ – auf dem Weg zu einem unabhängigen, sicheren Open-Source-Betriebssystem. Freestanding x86-Kernel, Community-getrieben, GUI, Netzwerk, IPC und Verschlüsselung als Fundament. Vollständig von Grund auf in C entwickelt.</p>
         <div class="footer-links">
           <a href="https://github.com/MachuraHarry/RoninOS" target="_blank">GitHub</a>
           <a href="https://github.com/MachuraHarry/RoninOS/issues" target="_blank">Issues</a>
           <a href="https://github.com/MachuraHarry/RoninOS/discussions" target="_blank">Discussions</a>
+          <a href="https://github.com/MachuraHarry/RoninOS/wiki" target="_blank">Wiki</a>
         </div>
       </div>
       <div class="footer-bottom">
